@@ -14,7 +14,9 @@ struct DashboardView: View {
   var body: some View {
     List {
       Section { PeriodPicker(store: period) }
-      if let summary = period.summary, let trends = period.trends {
+      if period.showsPlaceholder {
+        placeholder
+      } else if let summary = period.summary, let trends = period.trends {
         Section {
           total("Total income", summary.income)
           total("Total expenses", summary.expenses)
@@ -57,14 +59,14 @@ struct DashboardView: View {
               "Current: \(trends.start) – \(trends.end). Previous: \(trends.previous.start) – \(trends.previous.end). Refunds reduce spending.",
             data: spending(trends), horizontal: true)
         }
-      } else if period.loading {
-        Section {
-          ForEach(["Total income", "Total expenses", "Net change"], id: \.self) {
-            total($0, Money(1000)).redacted(reason: .placeholder).accessibilityHidden(true)
-          }
-        }
       }
-    }.listStyle(.insetGrouped).navigationTitle("Dashboard").refreshable {
+    }.listStyle(.insetGrouped).navigationTitle("Dashboard")
+    .smoothChanges(
+      period.showsPlaceholder
+        ? nil
+        : period.summary.map { [$0.income, $0.expenses, $0.netChange] + $0.breakdown.map(\.amount) }
+    )
+    .refreshable {
       await period.refresh(dashboard: true)
     }
     .toolbar {
@@ -83,6 +85,35 @@ struct DashboardView: View {
       ExportView(store: export, offline: client.access.offline)
     }
   }
+  /// Mirrors the loaded sections so figures replace placeholders without the list jumping.
+  private var placeholder: some View {
+    Group {
+      Section {
+        total("Total income", Money(10000))
+        total("Total expenses", Money(10000))
+        total("Net change", Money(10000))
+      } header: {
+        Text("Recorded activity for this period")
+      }
+      Section("Spending by category") {
+        ForEach(["Groceries", "Dining", "Transport"], id: \.self) { total($0, Money(1000)) }
+      }
+      Section {
+        Text("The last 12 weeks").font(.title2.bold())
+        Text("0000-00-00 – 0000-00-00").font(.caption)
+        ForEach(["Income and expenses", "Net change", "Where the spending went"], id: \.self) {
+          title in
+          VStack(alignment: .leading, spacing: 16) {
+            Text(title).font(.headline)
+            Text("Placeholder summary describing the figures across this span of time.")
+              .font(.subheadline)
+            RoundedRectangle(cornerRadius: 8).fill(.quaternary).frame(height: 240)
+            Text("Show as table")
+          }.padding(.vertical, 8)
+        }
+      }
+    }.redacted(reason: .placeholder).accessibilityHidden(true)
+  }
   private func startExport(_ kind: ExportStore.Kind) {
     guard let summary = period.summary else { return }
     showingExport = true
@@ -91,7 +122,8 @@ struct DashboardView: View {
   private func total(_ label: String, _ money: Money, showPlus: Bool = false) -> some View {
     LabeledContent {
       Text(money.formatted(showPlus: showPlus)).font(.headline.monospacedDigit()).foregroundStyle(
-        .primary)
+        .primary
+      ).contentTransition(.numericText())
     } label: {
       Text(label)
     }.padding(.vertical, 3)

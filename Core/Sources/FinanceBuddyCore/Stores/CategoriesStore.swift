@@ -3,7 +3,7 @@ import Observation
 
 @MainActor @Observable public final class CategoriesStore {
   public private(set) var lists: CategoryLists?
-  public private(set) var loading = false
+  public private(set) var loading: Bool
   public private(set) var busy = false
   public private(set) var error: String?
   public private(set) var pending: CategoryRequest?
@@ -14,6 +14,7 @@ import Observation
   public init(client: any APIClient, lists: CategoryLists? = nil) {
     self.client = client
     self.lists = lists
+    loading = lists == nil
   }
   public func load() async {
     sequence += 1

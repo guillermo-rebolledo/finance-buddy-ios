@@ -15,6 +15,19 @@ struct LoadingView: View {
   }
 }
 
+extension View {
+  /// Animates placeholders turning into content and rows arriving, unless Reduce Motion is on.
+  func smoothChanges(_ value: some Equatable) -> some View { modifier(SmoothChanges(value: value)) }
+}
+
+private struct SmoothChanges<Value: Equatable>: ViewModifier {
+  @Environment(\.accessibilityReduceMotion) private var reduceMotion
+  let value: Value
+  func body(content: Content) -> some View {
+    content.animation(reduceMotion ? nil : .easeInOut(duration: 0.25), value: value)
+  }
+}
+
 #Preview("Loading – light") {
   List { LoadingView(title: "Loading categories…") }
     .preferredColorScheme(.light)

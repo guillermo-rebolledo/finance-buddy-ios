@@ -13,7 +13,8 @@ struct PeriodPicker: View {
       if typeSize.isAccessibilitySize {
         kindPicker.pickerStyle(.menu)
         PeriodTitle(
-          summary: store.summary, fallback: store.selection.requestDescription, stacked: true)
+          summary: store.summary, fallback: store.selection.requestDescription, stacked: true,
+          loading: store.showsPlaceholder)
         HStack {
           previous
           Spacer()
@@ -24,7 +25,8 @@ struct PeriodPicker: View {
         HStack {
           previous
           PeriodTitle(
-            summary: store.summary, fallback: store.selection.requestDescription, stacked: false)
+            summary: store.summary, fallback: store.selection.requestDescription, stacked: false,
+            loading: store.showsPlaceholder)
           next
         }
       }
@@ -46,7 +48,6 @@ struct PeriodPicker: View {
           }
         }
       }
-      if store.loading { LoadingView(title: "Loading period…").font(.caption) }
       if let message = store.failureMessage {
         VStack(alignment: .leading, spacing: 8) {
           Label(message, systemImage: "exclamationmark.triangle").font(.callout)
