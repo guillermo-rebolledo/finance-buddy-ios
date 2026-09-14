@@ -16,6 +16,8 @@ import Observation
   public private(set) var error: String?
   public private(set) var field: String?
   public private(set) var saved = false
+  /// The budget the saved entry counts against, when the reply carried one.
+  public private(set) var savedBudget: BudgetView?
   private var creationID: String?
   private let client: any APIClient
   public init(
@@ -93,7 +95,7 @@ import Observation
     field = nil
     defer { busy = false }
     do {
-      try await client.save(request, correcting: original != nil)
+      savedBudget = try await client.save(request, correcting: original != nil)
       saved = true
       pending = nil
       creationID = nil

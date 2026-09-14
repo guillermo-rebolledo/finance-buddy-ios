@@ -13,6 +13,8 @@ public struct Summary: Codable, Sendable {
   public let categories: [Category]
   public let entries: [JournalEntry]
   public let breakdown: [SpendingGroup]
+  /// The period's budget, or nil when it has none or the server predates budgets.
+  public let budget: BudgetView?
   public var containsToday: Bool { contains(today) }
   public func contains(_ day: CalendarDate) -> Bool { start <= day && day <= end }
   public var selection: PeriodSelection { .init(kind: kind, date: date) }

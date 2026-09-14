@@ -21,7 +21,8 @@ final class FinanceBuddyUITests: XCTestCase {
     amount.tap()
     amount.typeText("42.50")
     app.buttons["saveEntry"].tap()
-    XCTAssertTrue(app.staticTexts["Entry saved."].waitForExistence(timeout: 5))
+    XCTAssertTrue(
+      app.staticTexts["Entry saved. MXN 427.50 left this week."].waitForExistence(timeout: 5))
     let row = app.buttons.containing(.staticText, identifier: "MXN 42.50").firstMatch
     XCTAssertTrue(row.waitForExistence(timeout: 5))
     row.tap()
@@ -46,6 +47,41 @@ final class FinanceBuddyUITests: XCTestCase {
     XCTAssertTrue(app.buttons["Today"].waitForExistence(timeout: 5))
     app.buttons["Today"].tap()
     XCTAssertTrue(app.staticTexts["This week"].waitForExistence(timeout: 5))
+  }
+
+  @MainActor func testBudgetsTabSetsChangesAndStopsBudgets() {
+    let app = XCUIApplication()
+    app.launchArguments = ["-useFakeAPI"]
+    app.launch()
+    XCTAssertTrue(app.tabBars.buttons["Budgets"].waitForExistence(timeout: 10))
+    app.tabBars.buttons["Budgets"].tap()
+    XCTAssertTrue(app.staticTexts["MXN 470.00 left"].waitForExistence(timeout: 5))
+    XCTAssertTrue(app.staticTexts["Week of 7–13 Sep"].exists)
+    let setMonth = app.buttons["budget-month"]
+    if !setMonth.isHittable { app.swipeUp() }
+    setMonth.tap()
+    let amount = app.textFields["budgetAmount"]
+    XCTAssertTrue(amount.waitForExistence(timeout: 5))
+    XCTAssertTrue(
+      app.descendants(matching: .any).matching(
+        NSPredicate(format: "label CONTAINS 'September 2026'")
+      ).firstMatch.waitForExistence(timeout: 5))
+    amount.tap()
+    amount.typeText("8000")
+    app.buttons["saveBudget"].tap()
+    XCTAssertTrue(
+      app.staticTexts["Budget of MXN 8,000.00 saved for every month from 1 Sep."].waitForExistence(
+        timeout: 5))
+    XCTAssertTrue(app.staticTexts["MXN 6,470.00 left"].waitForExistence(timeout: 5))
+    let stop = app.buttons["Stop month budget from this month"]
+    for _ in 0..<6 where !stop.isHittable { app.swipeUp() }
+    stop.tap()
+    XCTAssertTrue(app.buttons["Stop Budget"].waitForExistence(timeout: 5))
+    app.buttons["Stop Budget"].tap()
+    XCTAssertTrue(app.staticTexts["Month budget stopped from this month."].waitForExistence(timeout: 5))
+    app.tabBars.buttons["Dashboard"].tap()
+    XCTAssertTrue(app.staticTexts["Repeating budget."].waitForExistence(timeout: 5))
+    XCTAssertTrue(app.staticTexts["MXN 470.00 left"].exists)
   }
 
   @MainActor func testCategoryLifecycleAndSignOut() {
@@ -161,7 +197,7 @@ final class FinanceBuddyUITests: XCTestCase {
     app.launchArguments = ["-useFakeAPI", "-largestType", "-dark"]
     app.launch()
     XCTAssertTrue(app.buttons["addEntry"].waitForExistence(timeout: 10))
-    for name in ["Entries", "Dashboard", "Categories", "Settings"] {
+    for name in ["Entries", "Dashboard", "Budgets", "Categories", "Settings"] {
       app.tabBars.buttons[name].tap()
       let attachment = XCTAttachment(screenshot: app.screenshot())
       attachment.name = name + " – largest accessibility size, dark"

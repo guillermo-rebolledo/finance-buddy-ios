@@ -2,6 +2,14 @@
 
 Recorded on September 13, 2026 using Xcode 26.6, Swift 6 strict concurrency, and iOS 26.5 / iOS 17.5 simulators. Minimum deployment target: iOS 17. App version: 1.0, build 12.
 
+## Budgets (backend spec #46)
+
+- Matched the additive contract on the backend's `main`: `GET /api/budgets?before=`, `PUT` and `DELETE /api/budgets?kind=&date=`, the `budget` view inside `GET /api/journal`, the optional `budget` in entry save replies, and the `period_ended` refusal code. Periods are always named by kind and date; the app never computes a period start.
+- New core tests cover decoding a summary with, without, and with a null `budget`; the shared wording for left, over, under, left per day, and period labels; editor prefill from the resolved period, zero-allowed validation, ended periods, saving exactly the resolved period, promoting a one-off to repeating; list paging through Past with the cursor; stopping a span; and the entry reply carrying the shortest budgeted period. Client tests check the query parameters and JSON bodies of every budget request and that an unreadable `budget` in a confirmed save reply does not turn the save into an unconfirmed one.
+- The in-memory fake keeps budget spans the way the server does (one-off precedence, closing a span at the period before a change, scheduled changes, stop from a period). Its Past listing walks a bounded window back rather than paging real history.
+- Simulator run on iPhone 17e (iOS 26.5): all 51 Swift Testing core tests pass (eight of them new), the five view tests pass, and all 11 UI tests pass, including the new Budgets flow (set a monthly budget from Now, see the left figure update, stop the repeating budget through its confirmation, and see the dashboard card) and the entry toast that now reads "Entry saved. MXN 427.50 left this week." The largest-text and light accessibility audits include the Budgets tab and the budget form. Debug build has no compiler warnings.
+- Not verified: live budgets against a deployed backend from the app. The fake models the contract, so the owner should set, change, stop, and remove a budget on the phone against production and compare with the web.
+
 ## Sign in with Apple integration
 
 - Matched the native contract from backend PR #45: `provider: "apple"`, SHA-256 nonce in the Apple request, original nonce alongside the identity token in the backend request, and signed response-header storage only.

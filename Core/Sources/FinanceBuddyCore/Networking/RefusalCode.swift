@@ -12,6 +12,7 @@ public enum RefusalCode: String, Codable, CaseIterable, Sendable {
   case upgradeRequired = "upgrade_required"
   case unavailable
   case notConfirmed = "not_confirmed"
+  case periodEnded = "period_ended"
   case unknown
   public init(from decoder: any Decoder) throws {
     self = Self(rawValue: try decoder.singleValueContainer().decode(String.self)) ?? .unknown
