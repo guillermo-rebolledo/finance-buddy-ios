@@ -29,7 +29,7 @@ import SwiftUI
       guard let token = result.user.idToken?.tokenString else {
         throw ClientError.missingSignedToken
       }
-      await session.authenticate(idToken: token, nonce: nonce)
+      await session.authenticate(provider: .google, idToken: token, nonce: nonce)
       if session.state != .signedIn { GIDSignIn.sharedInstance.signOut() }
     } catch { session.message = Refusal.signInMessage }
   }

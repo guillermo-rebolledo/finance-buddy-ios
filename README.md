@@ -25,11 +25,23 @@ try await GIDSignIn.sharedInstance.signIn(
 
 For a physical development device, select your Apple development team in Xcode. Debug's localhost is the device itself; use a reachable HTTPS development origin for device testing. Release already embeds the stable production origin. App Store distribution is outside this project’s scope.
 
+## Sign in with Apple
+
+The sign-in screen offers Apple's native authorization sheet alongside Google. It requests email, sends a fresh SHA-256 nonce to Apple, and exchanges the identity token with the original nonce at `/api/auth/sign-in/social` using `provider: "apple"`. Only the signed `set-auth-token` header is stored in Keychain. Cancellation returns to sign-in without an error. No Apple SDK dependency, Services ID, private key, or client secret is needed in the app.
+
+Before testing with a real Apple account:
+
+1. Enable **Sign in with Apple** for the App ID **com.guillermorebolledo.FinanceBuddy** in Apple Developer. Associate the website's Services ID with that primary App ID (or group this App ID under the website's existing primary App ID). Select the correct development team and refresh provisioning if needed. The entitlement is already included in both build configurations and `project.yml`.
+2. On each backend used by the app, configure `APPLE_CLIENT_ID`, `APPLE_CLIENT_SECRET`, and **`APPLE_IOS_BUNDLE_ID=com.guillermorebolledo.FinanceBuddy`**, then restart/redeploy. Follow the backend's [Apple setup guide](https://github.com/guillermo-rebolledo/finance-buddy/blob/main/docs/apple-sign-in.md) for credentials and renewal. These settings belong on the server.
+3. Run a signed build on a device with an Apple account. For Debug, use a reachable HTTPS backend origin; Release uses production. Verify successful sign-in, cancellation/retry, session restoration after relaunch, and sign-out.
+
+Apple and Google accounts with the same verified email open the same journal. To access an existing Google journal, choose **Share My Email** with the same email. **Hide My Email** uses a separate journal. Google Sheets still needs a Google account with the same verified email, connected through the website; PDF export works for Apple relay accounts too.
+
 ## Architecture
 
 - **Core / Networking:** `APIClient` is the protocol boundary. `LiveAPIClient` owns HTTP, headers, decoding, refusal mapping, token replacement, and the global upgrade gate. Its ephemeral session has no cookie storage or URL cache and does not follow redirects. Keychain uses `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly`.
 - **Core / Stores:** Main-actor `@Observable` feature stores own state and call the protocol. Period request sequencing prevents stale replies. The Dashboard commits summary and trends together after checking their period identity. A failed refresh preserves the loaded snapshot.
-- **FinanceBuddy:** SwiftUI views render the stores. Google Sign-In, network reachability, Quick Look, Safari, and chart accessibility are thin Apple/Google integrations.
+- **FinanceBuddy:** SwiftUI views render the stores. Apple and Google sign-in, network reachability, Quick Look, Safari, and chart accessibility are thin Apple/Google integrations.
 - **Core / Fixtures:** The in-memory client is injected into previews and tests. `-useFakeAPI` is enabled in Debug only and never changes the backend or bypasses a real session.
 
 Money is decoded from strings directly into `Decimal`. `Double` is used only when projecting already-decoded values into chart coordinates and Audio Graphs; arithmetic and visible monetary labels remain decimal. `CalendarDate` keeps Mexico City dates as year/month/day. Its UTC `Date` bridge is only for system controls and single-day stepping. Live code never calculates summary period boundaries.
@@ -58,4 +70,4 @@ See [verification](docs/verification.md) for results and remaining owner/device 
 
 ## Project notes
 
-The Google logo is an unmodified asset from GoogleSignIn-iOS 10.0.0; its Apache license is included in `docs/GoogleSignIn-LICENSE`. `scripts/generate-icon.swift` produces the app icon with Apple’s SF Symbols. There are no analytics, local financial persistence, background queues, extra authentication providers, or in-app Google Drive authorization.
+The Google logo is an unmodified asset from GoogleSignIn-iOS 10.0.0; its Apache license is included in `docs/GoogleSignIn-LICENSE`. `scripts/generate-icon.swift` produces the app icon with Apple’s SF Symbols. There are no analytics, local financial persistence, background queues, or in-app Google Drive authorization.

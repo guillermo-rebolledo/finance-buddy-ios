@@ -29,6 +29,10 @@ targets:
     type: application
     platform: iOS
     sources: [FinanceBuddy]
+    entitlements:
+      path: FinanceBuddy/FinanceBuddy.entitlements
+      properties:
+        com.apple.developer.applesignin: [Default]
     configFiles:
       Debug: Config/Debug.xcconfig
       Release: Config/Release.xcconfig
@@ -68,6 +72,7 @@ targets:
       - FinanceBuddyViewTests
       - FinanceBuddy/Dashboard/FinanceChartDescriptor.swift
       - FinanceBuddy/Dashboard/ChartDatum.swift
+      - FinanceBuddy/Session/AppleSignInFlow.swift
     dependencies:
       - package: FinanceBuddyCore
     settings:

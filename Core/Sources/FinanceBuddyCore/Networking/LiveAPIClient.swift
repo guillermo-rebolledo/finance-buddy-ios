@@ -108,18 +108,19 @@ import Observation
     if reply == nil { try clearToken() }
     return reply
   }
-  public func signIn(idToken: String, nonce: String) async throws {
+  public func signIn(provider: SignInProvider, idToken: String, nonce: String) async throws {
     struct Token: Encodable {
       let token: String
       let nonce: String
     }
     struct Body: Encodable {
-      let provider = "google"
+      let provider: SignInProvider
       let idToken: Token
     }
     let (_, response) = try await request(
       "api/auth/sign-in/social", method: "POST",
-      body: JSONEncoder().encode(Body(idToken: Token(token: idToken, nonce: nonce))))
+      body: JSONEncoder().encode(
+        Body(provider: provider, idToken: Token(token: idToken, nonce: nonce))))
     guard response.value(forHTTPHeaderField: "set-auth-token")?.isEmpty == false else {
       try clearToken()
       throw ClientError.missingSignedToken
