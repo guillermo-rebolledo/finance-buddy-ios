@@ -2,6 +2,12 @@
 
 Recorded on September 13, 2026 using Xcode 26.6, Swift 6 strict concurrency, and iOS 26.5 / iOS 17.5 simulators. Minimum deployment target: iOS 17. App version: 1.0, build 12.
 
+## Physical-device connection fix — September 14, 2026
+
+- The physical-device Debug app embedded `http://localhost:3000`, pointing session restoration at the phone itself instead of the Mac backend. Debug now defaults to the production HTTPS origin, with localhost selected only for the simulator SDK. Optional SDK-specific development origins are documented in `Config/Local.xcconfig.example`.
+- A signed Debug build for the connected iPhone 16 Pro Max succeeded and was installed. Its built Info.plist contains `https://financebuddy.tech`; an unauthenticated request from the Mac to that origin's session endpoint with build 12 returned HTTP 200 and `null`. Resolved Debug simulator settings still contain `http://localhost:3000`.
+- Live on-phone sign-in and journal loading remain to be confirmed. The build reported an interface-orientation warning unrelated to this configuration change.
+
 ## Budgets (backend spec #46)
 
 - Matched the additive contract on the backend's `main`: `GET /api/budgets?before=`, `PUT` and `DELETE /api/budgets?kind=&date=`, the `budget` view inside `GET /api/journal`, the optional `budget` in entry save replies, and the `period_ended` refusal code. Periods are always named by kind and date; the app never computes a period start.
@@ -29,7 +35,7 @@ Recorded on September 13, 2026 using Xcode 26.6, Swift 6 strict concurrency, and
 - The 39 Swift Testing tests passed on macOS and in the iOS simulator during implementation. They cover decimal money, calendar dates, refusals, request headers, token replacement, retry identities, and store consistency.
 - The complete iOS 26.5 suite now passes: 39 core tests, three Audio Graph descriptor tests, and all 10 UI tests. These include the original period Dynamic Type/clipping audit, entry/category regression flows, toast behavior, and the expanded light/AX5 accessibility flows. Debug and Release builds have no compiler warnings.
 - Toast screenshots were inspected in dark mode, including an error above the keyboard and a success above the tab bar. Status messages do not become list rows.
-- Debug uses localhost with a localhost-only ATS exception. Release uses the stable HTTPS production origin without that exception.
+- Debug uses localhost on simulators and the production HTTPS origin on physical devices, with a localhost-only ATS exception. Release uses the stable HTTPS production origin without that exception.
 - The owner confirmed live app/web parity on September 13, 2026: entry/category changes and matching day, week, and month figures (user-reported verification).
 
 Automated UI tests use the in-memory fake. Their entries and categories do not alter the owner's journal. Local OAuth configuration, build products, test reports, and screenshots are excluded from Git.

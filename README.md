@@ -6,7 +6,7 @@ A native client for the existing Finance Buddy journal. Swift 6, SwiftUI, Observ
 
 Open `FinanceBuddy.xcodeproj`, select the **FinanceBuddy** scheme and an iPhone simulator, then Run. The checked-in Xcode project is ready to open; XcodeGen is only needed when changing the project structure (`brew install xcodegen`, then `xcodegen generate`). GoogleSignIn-iOS **10.0.0** is exact-pinned through SPM, with its resolved transitive dependencies committed.
 
-Debug uses `http://localhost:3000`. Start the backend in its own checkout with `pnpm dev:local`. Release uses the production HTTPS origin. Only the Debug Info.plist grants an ATS exception, scoped to localhost.
+Debug uses `http://localhost:3000` on simulators; start the backend in its own checkout with `pnpm dev:local`. On physical devices, Debug uses `https://financebuddy.tech`. Release uses the production HTTPS origin on both destinations. Only the Debug Info.plist grants an ATS exception, scoped to localhost.
 
 Copy `Config/Local.xcconfig.example` to `Config/Local.xcconfig` and fill in the **public** iOS client ID, web/server client ID, and reversed iOS client ID. Local.xcconfig is ignored. The bundle ID registered with the Google iOS OAuth client must be **com.guillermorebolledo.FinanceBuddy**. Set the same iOS client ID as `GOOGLE_IOS_CLIENT_ID` in the backend's private configuration. No Google client secret belongs in this app.
 
@@ -23,7 +23,7 @@ try await GIDSignIn.sharedInstance.signIn(
 
 `GIDConfiguration` supplies `serverClientID` using the web client ID. The app sends the Google ID token with the same fresh nonce to the backend. Only `set-auth-token` is saved to Keychain; the response body's unsigned token is never used. Run a normally signed simulator build: disabling code signing can prevent Keychain access.
 
-For a physical development device, select your Apple development team in Xcode. Debug's localhost is the device itself; use a reachable HTTPS development origin for device testing. Release already embeds the stable production origin. App Store distribution is outside this project’s scope.
+For a physical development device, select your Apple development team in Xcode. Debug connects to production by default because localhost on a phone is the phone itself. To use a development backend, set `API_BASE_URL[sdk=iphoneos*]` to a reachable HTTPS origin in `Config/Local.xcconfig`; see the example file for xcconfig URL syntax. Rebuild and run after changing the origin. App Store distribution is outside this project’s scope.
 
 ## Sign in with Apple
 
