@@ -2,3 +2,8 @@
 GOOGLE_IOS_CLIENT_ID = your-ios-id.apps.googleusercontent.com
 GOOGLE_SERVER_CLIENT_ID = your-web-id.apps.googleusercontent.com
 GOOGLE_REVERSED_CLIENT_ID = com.googleusercontent.apps.your-ios-id
+
+// Optional backend overrides. Keep the SDK condition so each destination uses
+// the intended server. $() preserves the double slash in xcconfig syntax.
+// API_BASE_URL[sdk=iphoneos*] = https:/$()/your-development-host.example
+// API_BASE_URL[sdk=iphonesimulator*] = http:/$()/localhost:3000
