@@ -18,7 +18,7 @@ import Foundation
     if let failure { throw failure }
     return signedIn ? Fixtures.session : nil
   }
-  public func signIn(idToken: String, nonce: String) async throws {
+  public func signIn(provider: SignInProvider, idToken: String, nonce: String) async throws {
     signedIn = true
     access.signedOut = false
   }

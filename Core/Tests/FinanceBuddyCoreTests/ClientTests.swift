@@ -1,5 +1,5 @@
-import Foundation
 import AppIntents
+import Foundation
 import Testing
 
 @testable import FinanceBuddyCore
@@ -127,7 +127,8 @@ final class StubProtocol: URLProtocol, @unchecked Sendable {
     #expect(try await client.pdf(.init()).filename == "snapshot.pdf")
     try await client.signOut(everywhere: true)
   }
-  @Test func signedHeaderReplacesTokenAndBodyIsNeverUsed() async throws {
+  @Test(arguments: SignInProvider.allCases)
+  func signedHeaderReplacesTokenAndBodyIsNeverUsed(provider: SignInProvider) async throws {
     let (client, tokens) = makeClient(token: nil) { request in
       if request.url!.path == "/api/auth/sign-in/social" {
         #expect(request.value(forHTTPHeaderField: "Authorization") == nil)
@@ -136,8 +137,11 @@ final class StubProtocol: URLProtocol, @unchecked Sendable {
         #expect(request.value(forHTTPHeaderField: "X-Finance-Buddy-Build") == "12.1")
         let object =
           (try? JSONSerialization.jsonObject(with: StubProtocol.body(request))) as? [String: Any]
-        #expect(object?["provider"] as? String == "google")
-        #expect((object?["idToken"] as? [String: String]) == ["token": "google", "nonce": "nonce"])
+        #expect(object?["provider"] as? String == provider.rawValue)
+        #expect(
+          (object?["idToken"] as? [String: String]) == [
+            "token": "identity-token", "nonce": "original-nonce",
+          ])
         return (200, ["set-auth-token": "signed-header"], Data(#"{"token":"unsigned-body"}"#.utf8))
       }
       #expect(request.value(forHTTPHeaderField: "Authorization") == "Bearer signed-header")
@@ -145,17 +149,19 @@ final class StubProtocol: URLProtocol, @unchecked Sendable {
         200, ["set-auth-token": "refreshed-header"], try! JSONEncoder().encode(Fixtures.session)
       )
     }
-    try await client.signIn(idToken: "google", nonce: "nonce")
+    try await client.signIn(provider: provider, idToken: "identity-token", nonce: "original-nonce")
     #expect(tokens.token == "signed-header")
     _ = try await client.session()
     #expect(tokens.token == "refreshed-header")
   }
-  @Test func missingHeaderCannotAuthenticate() async {
+  @Test(arguments: SignInProvider.allCases)
+  func missingHeaderCannotAuthenticate(provider: SignInProvider) async {
     let (client, tokens) = makeClient(token: nil) { _ in
       (200, [:], Data(#"{"token":"unsigned"}"#.utf8))
     }
     await #expect(throws: ClientError.self) {
-      try await client.signIn(idToken: "google", nonce: "nonce")
+      try await client.signIn(
+        provider: provider, idToken: "identity-token", nonce: "original-nonce")
     }
     #expect(tokens.token == nil)
   }

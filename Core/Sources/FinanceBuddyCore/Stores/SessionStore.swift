@@ -32,12 +32,12 @@ import Observation
       state = .unavailable
     }
   }
-  public func authenticate(idToken: String, nonce: String) async {
+  public func authenticate(provider: SignInProvider, idToken: String, nonce: String) async {
     guard !busy else { return }
     busy = true
     message = nil
     do {
-      try await client.signIn(idToken: idToken, nonce: nonce)
+      try await client.signIn(provider: provider, idToken: idToken, nonce: nonce)
       busy = false
       await restore()
     } catch {

@@ -2,6 +2,16 @@
 
 Recorded on September 13, 2026 using Xcode 26.6, Swift 6 strict concurrency, and iOS 26.5 / iOS 17.5 simulators. Minimum deployment target: iOS 17. App version: 1.0, build 12.
 
+## Sign in with Apple integration
+
+- Matched the native contract from backend PR #45: `provider: "apple"`, SHA-256 nonce in the Apple request, original nonce alongside the identity token in the backend request, and signed response-header storage only.
+- All 41 core tests pass on macOS and iOS 26.5. The sign-in transport tests now exercise both providers; additional session tests cover provider forwarding, session restoration, and Apple refusal recovery.
+- All five iOS view/integration tests pass, including the known SHA-256 vector and Apple cancellation, fresh-nonce retry, and failure presentation.
+- Debug and Release simulator builds pass without compiler warnings. Both generated simulator entitlement files contain `com.apple.developer.applesignin = [Default]`.
+- The full iOS 26.5 suite passes: 41 core tests, five view/integration tests, and 10 UI tests. Light and largest-text accessibility flows verify the sign-in screen, and both Apple and Google buttons are present after sign-out.
+- After the final Apple button style adjustment, the light and largest-text dark screen audits were rerun successfully, and Release was rebuilt successfully. The system's outlined white button remains visible in either appearance.
+- Live Apple authorization remains unverified. Complete the [README setup](../README.md#sign-in-with-apple), then test on a signed physical device: Share My Email continuity with the existing Google journal, Hide My Email isolation, cancellation/retry, relaunch restoration, and session revocation. Automated tests do not validate Apple Developer registration, provisioning, or deployed provider credentials.
+
 ## Confirmed
 
 - Debug builds and installs on the iPhone 17 Pro simulator without compiler warnings.
@@ -30,7 +40,7 @@ The broad exploratory contrast/font audit reported system-control findings on bo
 
 ## Remaining before completion
 
-- Complete the backend's `docs/verification.md` iPhone checklist against a deployment, including physical-device behavior, owner/non-owner sign-in, session revocation, exports, and refusal recovery.
+- Complete the backend's `docs/verification.md` iPhone checklist against a deployment, including physical-device behavior, verified-account sign-in and separate-account isolation, session revocation, exports, and refusal recovery.
 - Complete live PDF/Sheets checks. The owner has confirmed entry/category mutation and figure parity separately; simulator fixture tests do not establish export behavior.
 - Physical VoiceOver navigation and audible Audio Graph playback remain pending at the owner's request. Simulator audits and descriptor tests are not a substitute for listening to and navigating the app on a device.
 

@@ -5,7 +5,7 @@ import Observation
 @MainActor public protocol APIClient: AnyObject, Sendable {
   var access: AppAccess { get }
   func session() async throws -> SessionReply?
-  func signIn(idToken: String, nonce: String) async throws
+  func signIn(provider: SignInProvider, idToken: String, nonce: String) async throws
   func signOut(everywhere: Bool) async throws
   func clearToken() throws
   func summary(_ period: PeriodSelection) async throws -> Summary

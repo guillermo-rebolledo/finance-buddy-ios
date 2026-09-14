@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		014D34AB1B2ADD4AF0534380 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20D812C1E5C6FA96B9620C36 /* Assets.xcassets */; };
+		02F7B0FA4B8DF13C808C3AAF /* AppleSignInFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A4E17A60204ACD22D73194 /* AppleSignInFlowTests.swift */; };
 		08A38C093061583ABA91B152 /* PeriodTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC92623BB8A4BA845855C04 /* PeriodTests.swift */; };
 		0A571A179817179968994918 /* EntryEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A27457A51BA313F0652F9732 /* EntryEditorView.swift */; };
 		0C00BFAF2DA50384F2123ABB /* ExportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6731FC9DA6781A6D0A8E351 /* ExportTests.swift */; };
@@ -27,6 +28,7 @@
 		633B02C353DFE48AE86BE03C /* CategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F66B031A4DDCF1CDE093A0F /* CategoriesView.swift */; };
 		691D46B717EFE8EA23D4A2F5 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDAE4657F023E158D8E6C4A /* SignInView.swift */; };
 		6D2F50F01A8F1BAC6E8EDA2F /* PeriodPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7AA88DDFE60E96AE828387B /* PeriodPicker.swift */; };
+		720D1BA044D211F67EB1CF15 /* AppleSignInFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD3D342CC5D5A994511A245 /* AppleSignInFlow.swift */; };
 		765AFDAB495B17AD07BDE792 /* FinanceBuddyCore in Frameworks */ = {isa = PBXBuildFile; productRef = 59028282DD866125A5E71363 /* FinanceBuddyCore */; };
 		76A289BF45AAF1058D685561 /* ConnectivityMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7851F3ABD3939026D99F9E73 /* ConnectivityMonitor.swift */; };
 		7828760BF7483239DEE8838E /* ToastMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC2367D75BA1E44F4486DFD4 /* ToastMessage.swift */; };
@@ -40,6 +42,7 @@
 		9F964FA11E7D3B52C0532E9A /* TransportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6B54E80CB35AA2954D2950 /* TransportTests.swift */; };
 		A2505A1D7A583F3B33AAFE3C /* TrendChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 813A4F261B460C6AEC404EF0 /* TrendChart.swift */; };
 		AB39B89AD68125D00AEF964A /* EntriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4780ADB104F956FD422E1BB6 /* EntriesView.swift */; };
+		ADCBEA2A9873E38A8A839B78 /* AppleSignInFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD3D342CC5D5A994511A245 /* AppleSignInFlow.swift */; };
 		AE9C290CBD0A5C08C6812D7F /* DeleteEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F303FD4B4C58803C10AE8A3 /* DeleteEntryView.swift */; };
 		AF144CABDF77128BDAF82A18 /* SessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7DD724F7EE292A94F8B5740 /* SessionTests.swift */; };
 		B87A5F768DB452F59DAFEAC9 /* EntryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA27B83500E8D43FA763E7E /* EntryTests.swift */; };
@@ -68,6 +71,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		01A4E17A60204ACD22D73194 /* AppleSignInFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSignInFlowTests.swift; sourceTree = "<group>"; };
 		01F39A4912DC0D21595C4D53 /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
 		0F303FD4B4C58803C10AE8A3 /* DeleteEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteEntryView.swift; sourceTree = "<group>"; };
 		106104B9A8B95609A35C981E /* ClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientTests.swift; sourceTree = "<group>"; };
@@ -78,6 +82,7 @@
 		3896A4824116435BACAC080A /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		4780ADB104F956FD422E1BB6 /* EntriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntriesView.swift; sourceTree = "<group>"; };
 		48734D0A267686C5696567E3 /* GoogleSignInFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleSignInFlow.swift; sourceTree = "<group>"; };
+		4CD3D342CC5D5A994511A245 /* AppleSignInFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSignInFlow.swift; sourceTree = "<group>"; };
 		4DA155D9F25E73862666D4DD /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		4F66B031A4DDCF1CDE093A0F /* CategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesView.swift; sourceTree = "<group>"; };
 		5049161EA364439EA548E776 /* FinanceBuddyCoreTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = FinanceBuddyCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -96,6 +101,7 @@
 		8EC92623BB8A4BA845855C04 /* PeriodTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeriodTests.swift; sourceTree = "<group>"; };
 		92F67E35721724D312758A53 /* FinanceBuddyUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = FinanceBuddyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A278F4ACB958D5E29F4A311 /* ValueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueTests.swift; sourceTree = "<group>"; };
+		9E457E08ABA483A9A515C50F /* FinanceBuddy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FinanceBuddy.entitlements; sourceTree = "<group>"; };
 		9E6B54E80CB35AA2954D2950 /* TransportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportTests.swift; sourceTree = "<group>"; };
 		A27457A51BA313F0652F9732 /* EntryEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryEditorView.swift; sourceTree = "<group>"; };
 		A6731FC9DA6781A6D0A8E351 /* ExportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportTests.swift; sourceTree = "<group>"; };
@@ -179,6 +185,7 @@
 		4BF821BC35BC5B24325F55F6 /* FinanceBuddyViewTests */ = {
 			isa = PBXGroup;
 			children = (
+				01A4E17A60204ACD22D73194 /* AppleSignInFlowTests.swift */,
 				611900984B3755AE8FE18D3D /* ChartDescriptorTests.swift */,
 			);
 			path = FinanceBuddyViewTests;
@@ -187,6 +194,7 @@
 		71D390E313AF0C6E29E9BCC7 /* Session */ = {
 			isa = PBXGroup;
 			children = (
+				4CD3D342CC5D5A994511A245 /* AppleSignInFlow.swift */,
 				48734D0A267686C5696567E3 /* GoogleSignInFlow.swift */,
 				AFDAE4657F023E158D8E6C4A /* SignInView.swift */,
 			);
@@ -225,6 +233,7 @@
 			isa = PBXGroup;
 			children = (
 				20D812C1E5C6FA96B9620C36 /* Assets.xcassets */,
+				9E457E08ABA483A9A515C50F /* FinanceBuddy.entitlements */,
 				7F5627D3D7C6EA46BC76D420 /* App */,
 				F53FE9EE16DE502019ACECF0 /* Categories */,
 				CAA73D29EE68D6803CF6F2DF /* Dashboard */,
@@ -479,6 +488,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				37040BD3AF0B562BCA74B341 /* AppShell.swift in Sources */,
+				ADCBEA2A9873E38A8A839B78 /* AppleSignInFlow.swift in Sources */,
 				45FEA9A7BD73621DCD201C97 /* BrowserDestination.swift in Sources */,
 				633B02C353DFE48AE86BE03C /* CategoriesView.swift in Sources */,
 				287F375673095B80315D3D61 /* CategoryEditorView.swift in Sources */,
@@ -513,6 +523,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				720D1BA044D211F67EB1CF15 /* AppleSignInFlow.swift in Sources */,
+				02F7B0FA4B8DF13C808C3AAF /* AppleSignInFlowTests.swift in Sources */,
 				4BF8D5E8B01E995CC53F5B61 /* ChartDatum.swift in Sources */,
 				E23C47B185F0E1670F7DCEA8 /* ChartDescriptorTests.swift in Sources */,
 				D5BA7B157A9DAB1D0A181E25 /* FinanceChartDescriptor.swift in Sources */,
@@ -715,6 +727,7 @@
 			baseConfigurationReference = 4DA155D9F25E73862666D4DD /* Debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = FinanceBuddy/FinanceBuddy.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -731,6 +744,7 @@
 			baseConfigurationReference = C6927015A37D1569FE7B24EB /* Release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = FinanceBuddy/FinanceBuddy.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

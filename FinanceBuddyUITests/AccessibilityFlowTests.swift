@@ -53,6 +53,7 @@ final class AccessibilityFlowTests: XCTestCase {
     app.swipeDown()
     app.buttons["Sign Out"].tap()
     XCTAssertTrue(app.buttons["Continue with Google"].waitForExistence(timeout: 5))
+    XCTAssertTrue(app.buttons["appleSignIn"].exists)
     try audit(app, "Sign in")
   }
 

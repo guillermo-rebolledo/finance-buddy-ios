@@ -18,7 +18,7 @@ public struct Refusal: Error, Codable, Sendable, LocalizedError {
       ? "Something went wrong. Please try again." : error
   }
   public static let signInMessage =
-    "Sign-in was not completed. Use the authorized, verified Google account and try again."
+    "Sign-in was not completed. Use a verified Apple or Google account and try again."
   public static func map(data: Data, status: Int, signIn: Bool = false, session: Bool = false)
     -> Self
   {
