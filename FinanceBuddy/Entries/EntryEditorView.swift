@@ -6,6 +6,7 @@ struct EntryEditorView: View {
   let offline: Bool
   let onSaved: (CalendarDate) -> Void
   @Environment(\.dismiss) private var dismiss
+  @Environment(\.dynamicTypeSize) private var typeSize
   @State private var pickerDate: Date
   @State private var discard = false
   @State private var notification: ToastMessage?
@@ -20,10 +21,11 @@ struct EntryEditorView: View {
     NavigationStack {
       Form {
         Section {
-          Picker("Type", selection: $store.kind) {
-            ForEach(MovementKind.allCases, id: \.self) { Text($0.title).tag($0) }
+          if typeSize.isAccessibilitySize {
+            typePicker.pickerStyle(.menu)
+          } else {
+            typePicker.pickerStyle(.segmented)
           }
-          .pickerStyle(.segmented).focused($focused, equals: "kind")
 
         } footer: {
           Text(
@@ -135,5 +137,10 @@ struct EntryEditorView: View {
       .toast($notification)
       .sensoryFeedback(.warning, trigger: store.error)
     }
+  }
+  private var typePicker: some View {
+    Picker("Type", selection: $store.kind) {
+      ForEach(MovementKind.allCases, id: \.self) { Text($0.title).tag($0) }
+    }.focused($focused, equals: "kind")
   }
 }

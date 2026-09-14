@@ -14,7 +14,8 @@ struct CategoryEditorView: View {
       Form {
         Section {
           LabeledContent("List", value: store.kind.title)
-          TextField("Category name", text: $store.name).focused($nameFocused)
+          TextField("Name", text: $store.name)
+            .accessibilityLabel("Category name").focused($nameFocused)
             .accessibilityIdentifier("categoryName")
             .disabled(store.busy || store.locked).submitLabel(.done)
         } footer: {
@@ -26,7 +27,7 @@ struct CategoryEditorView: View {
           Text("Retrying keeps the same category name and identifier.").font(.footnote)
         }
       }.navigationTitle(
-        store.original == nil ? "Add \(store.kind.rawValue) category" : "Rename category"
+        store.original == nil ? "New category" : "Rename"
       ).navigationBarTitleDisplayMode(.inline)
         .toolbar {
           ToolbarItem(placement: .cancellationAction) {

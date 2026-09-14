@@ -1,7 +1,7 @@
 import FinanceBuddyCore
 import SwiftUI
 
-enum PreviewScreen {
+enum PreviewScreen: String {
   case categoryEditor
   case entries, dashboard, categories, settings, signIn, editor, deletion, export, unavailable,
     upgrade

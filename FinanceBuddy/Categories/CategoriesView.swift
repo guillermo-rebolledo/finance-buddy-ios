@@ -44,9 +44,14 @@ struct CategoriesView: View {
   {
     Section {
       ForEach(categories) { row($0) }
-      Button("Add \(kind.rawValue) category", systemImage: "plus") { edit(kind: kind) }.disabled(
-        store.busy || client.access.offline
-      ).accessibilityIdentifier("add-\(kind.rawValue)-category")
+      Button { edit(kind: kind) } label: {
+        Text("Add \(kind.rawValue) category")
+          .fixedSize(horizontal: false, vertical: true)
+          .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+          .contentShape(Rectangle())
+      }
+      .disabled(store.busy || client.access.offline)
+      .accessibilityIdentifier("add-\(kind.rawValue)-category")
     } header: {
       Text(kind.title)
     } footer: {

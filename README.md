@@ -38,7 +38,7 @@ New entries, category creations, and Sheets exports keep their request identitie
 
 ## Tests and previews
 
-Run all unit, client, and UI tests with **Product → Test** in Xcode. Swift Testing covers values, refusals, HTTP integrity, token rotation, offline behavior, request identities, and store sequencing. XCTest covers UI flows and accessibility. The core tests can also run quickly on macOS:
+Run all unit, client, and UI tests with **Product → Test** in Xcode. Swift Testing covers values, refusals, HTTP integrity, token rotation, offline behavior, request identities, and store sequencing. Three additional Swift Testing cases verify Audio Graph descriptors. XCTest covers UI flows and accessibility. The core tests can also run quickly on macOS:
 
 ```sh
 swift test --package-path Core
@@ -52,7 +52,7 @@ xcodebuild -project FinanceBuddy.xcodeproj -scheme FinanceBuddy \
   -parallel-testing-enabled NO test
 ```
 
-Use `-useFakeAPI` in a Debug scheme’s launch arguments to explore without signing in. Optional fixture-only arguments `-light`, `-dark`, and `-largestType` support visual verification. The live client ignores them. `ScreenPreviews.swift` provides light, dark, and largest-size previews for every app screen, plus empty-day and failed-load scenarios. The normal fixture includes income, expenses, a refund, an archived category, and a twelve-week trend.
+Use `-useFakeAPI` in a Debug scheme’s launch arguments to explore without signing in. Optional fixture-only arguments `-light`, `-dark`, and `-largestType` support visual verification. The live client ignores them. For fixture-only screen inspection, add `-previewScreen` followed by `editor`, `categoryEditor`, `deletion`, `export`, `signIn`, `unavailable`, or `upgrade`; this route is available only with `-useFakeAPI` in Debug. `ScreenPreviews.swift` provides light, dark, and largest-size previews for every app screen, plus empty-day and failed-load scenarios. The normal fixture includes income, expenses, a refund, an archived category, and a twelve-week trend.
 
 See [verification](docs/verification.md) for results and remaining owner/device checks. The backend’s `docs/verification.md` remains the authoritative deployment/iPhone checklist.
 

@@ -25,7 +25,6 @@ struct EntryRow: View {
     ).accessibilityElement(children: .combine)
   }
   private var amount: some View {
-    Text(entry.signedAmount.formatted()).font(.headline.monospacedDigit()).foregroundStyle(
-      entry.kind == .income ? Color.green : Color.primary)
+    Text(entry.signedAmount.formatted()).font(.headline.monospacedDigit()).foregroundStyle(.primary)
   }
 }

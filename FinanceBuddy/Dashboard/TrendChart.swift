@@ -93,6 +93,6 @@ struct TrendChart: View {
     .chartYSelection(value: $selection)
     .frame(height: max(180, CGFloat(keys.count) * 66))
     .accessibilityChartDescriptor(
-      FinanceChartDescriptor(title: title, summary: summary, data: data))
+      FinanceChartDescriptor(title: title, summary: summary, data: data, horizontal: true))
   }
 }

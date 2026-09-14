@@ -21,15 +21,18 @@
 		4373324E00ED525A4B42E328 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2FC7EF0A5A154AE39F19AB0B /* GoogleSignInSwift */; };
 		45FEA9A7BD73621DCD201C97 /* BrowserDestination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CA08436B16073EFD511E346 /* BrowserDestination.swift */; };
 		4728F81EF32084847CDCA29D /* ExportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B84EFE12859D01584D1A6D9B /* ExportView.swift */; };
+		4BF8D5E8B01E995CC53F5B61 /* ChartDatum.swift in Sources */ = {isa = PBXBuildFile; fileRef = E29B4DE3E0EC33A7081A228E /* ChartDatum.swift */; };
 		4E1FD61F635A089FD6F2AF5B /* DashboardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0DFA4A756491A41ADA408D6 /* DashboardTests.swift */; };
 		60CEF6872287AF6EB1BEB9CD /* GoogleSignInFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48734D0A267686C5696567E3 /* GoogleSignInFlow.swift */; };
 		633B02C353DFE48AE86BE03C /* CategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F66B031A4DDCF1CDE093A0F /* CategoriesView.swift */; };
 		691D46B717EFE8EA23D4A2F5 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDAE4657F023E158D8E6C4A /* SignInView.swift */; };
 		6D2F50F01A8F1BAC6E8EDA2F /* PeriodPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7AA88DDFE60E96AE828387B /* PeriodPicker.swift */; };
+		765AFDAB495B17AD07BDE792 /* FinanceBuddyCore in Frameworks */ = {isa = PBXBuildFile; productRef = 59028282DD866125A5E71363 /* FinanceBuddyCore */; };
 		76A289BF45AAF1058D685561 /* ConnectivityMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7851F3ABD3939026D99F9E73 /* ConnectivityMonitor.swift */; };
 		7828760BF7483239DEE8838E /* ToastMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC2367D75BA1E44F4486DFD4 /* ToastMessage.swift */; };
 		793D60CD921916C25BDDC2A5 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87D65FD21A4A3B5B4214952 /* SettingsView.swift */; };
 		7F9BBD7705AEF797D1D4215D /* FinanceChartDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A605510F0BD236B82F2C16 /* FinanceChartDescriptor.swift */; };
+		8A64CD0F83E6E58560B480C8 /* AccessibilityFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A470C9E7AD2C4A19C7D072 /* AccessibilityFlowTests.swift */; };
 		8B959D19559D63F34F4046F4 /* ValueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A278F4ACB958D5E29F4A311 /* ValueTests.swift */; };
 		8D832BF8C3C86857A61EE708 /* FinanceBuddyCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0CBC658A76F660EF486E1ECF /* FinanceBuddyCore */; };
 		92C587E5CE7FB21D0473A138 /* FinanceBuddyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C46A409A08720E3120244A /* FinanceBuddyUITests.swift */; };
@@ -44,7 +47,9 @@
 		C2D5F1446851CE2431082F24 /* ScreenPreviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FCE6A7056C52F7B949326D9 /* ScreenPreviews.swift */; };
 		D2102212A4275C400AD8ECD1 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3896A4824116435BACAC080A /* RootView.swift */; };
 		D5147072AB1DB655D2173D98 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13C2A66FE7D69204B3B4902 /* DashboardView.swift */; };
+		D5BA7B157A9DAB1D0A181E25 /* FinanceChartDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A605510F0BD236B82F2C16 /* FinanceChartDescriptor.swift */; };
 		D8C9784584CDD21F414EFA32 /* PeriodTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BFA3F6430E81376EE85EDF4 /* PeriodTitle.swift */; };
+		E23C47B185F0E1670F7DCEA8 /* ChartDescriptorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611900984B3755AE8FE18D3D /* ChartDescriptorTests.swift */; };
 		E5315B5053FBE0B9A5B5D287 /* FinanceBuddyCore in Frameworks */ = {isa = PBXBuildFile; productRef = 1392A856D9ED05917ACAA420 /* FinanceBuddyCore */; };
 		EAFA8C4833955DB2AFAA812F /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01F39A4912DC0D21595C4D53 /* SafariView.swift */; };
 		ECAFB35BCAB173D8A6781595 /* FinanceBuddyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2957A6FC8BF63148604AE7 /* FinanceBuddyApp.swift */; };
@@ -76,11 +81,14 @@
 		4DA155D9F25E73862666D4DD /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		4F66B031A4DDCF1CDE093A0F /* CategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesView.swift; sourceTree = "<group>"; };
 		5049161EA364439EA548E776 /* FinanceBuddyCoreTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = FinanceBuddyCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		54A470C9E7AD2C4A19C7D072 /* AccessibilityFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityFlowTests.swift; sourceTree = "<group>"; };
 		58A605510F0BD236B82F2C16 /* FinanceChartDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceChartDescriptor.swift; sourceTree = "<group>"; };
 		5CA08436B16073EFD511E346 /* BrowserDestination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserDestination.swift; sourceTree = "<group>"; };
 		5FB1C1A6369A43C317131487 /* CategoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTests.swift; sourceTree = "<group>"; };
+		611900984B3755AE8FE18D3D /* ChartDescriptorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDescriptorTests.swift; sourceTree = "<group>"; };
 		6EFA779E9E7EB6176B8C7920 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		6FA27B83500E8D43FA763E7E /* EntryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryTests.swift; sourceTree = "<group>"; };
+		70FE44F13877DACCC54853EE /* FinanceBuddyViewTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = FinanceBuddyViewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7851F3ABD3939026D99F9E73 /* ConnectivityMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectivityMonitor.swift; sourceTree = "<group>"; };
 		7BFA3F6430E81376EE85EDF4 /* PeriodTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeriodTitle.swift; sourceTree = "<group>"; };
 		7FCE6A7056C52F7B949326D9 /* ScreenPreviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenPreviews.swift; sourceTree = "<group>"; };
@@ -129,6 +137,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9DEA9848A4EB5EF400ACD438 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				765AFDAB495B17AD07BDE792 /* FinanceBuddyCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -160,6 +176,14 @@
 			path = Period;
 			sourceTree = "<group>";
 		};
+		4BF821BC35BC5B24325F55F6 /* FinanceBuddyViewTests */ = {
+			isa = PBXGroup;
+			children = (
+				611900984B3755AE8FE18D3D /* ChartDescriptorTests.swift */,
+			);
+			path = FinanceBuddyViewTests;
+			sourceTree = "<group>";
+		};
 		71D390E313AF0C6E29E9BCC7 /* Session */ = {
 			isa = PBXGroup;
 			children = (
@@ -182,6 +206,7 @@
 		8389A3E5BFD7BF4C454AA8E6 /* FinanceBuddyUITests */ = {
 			isa = PBXGroup;
 			children = (
+				54A470C9E7AD2C4A19C7D072 /* AccessibilityFlowTests.swift */,
 				C1C46A409A08720E3120244A /* FinanceBuddyUITests.swift */,
 			);
 			path = FinanceBuddyUITests;
@@ -241,6 +266,7 @@
 				E509608EEEDDE9DE3072E255 /* FinanceBuddy.app */,
 				5049161EA364439EA548E776 /* FinanceBuddyCoreTests.xctest */,
 				92F67E35721724D312758A53 /* FinanceBuddyUITests.xctest */,
+				70FE44F13877DACCC54853EE /* FinanceBuddyViewTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -299,6 +325,7 @@
 				95C94708F0640D56AF910738 /* FinanceBuddy */,
 				E8A1F5D30A4AD2C215EA8FE3 /* FinanceBuddyCoreTests */,
 				8389A3E5BFD7BF4C454AA8E6 /* FinanceBuddyUITests */,
+				4BF821BC35BC5B24325F55F6 /* FinanceBuddyViewTests */,
 				156EBB5BC882D10B1724CBD7 /* Packages */,
 				C7D76A6DA157A71FED7F2464 /* Products */,
 			);
@@ -347,6 +374,25 @@
 			productReference = E509608EEEDDE9DE3072E255 /* FinanceBuddy.app */;
 			productType = "com.apple.product-type.application";
 		};
+		6EB6BB8CADC0CEDD4CBD5AEB /* FinanceBuddyViewTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BAB873462618F0D7D38B9B55 /* Build configuration list for PBXNativeTarget "FinanceBuddyViewTests" */;
+			buildPhases = (
+				E7595907F3DAAFAFF47E70ED /* Sources */,
+				9DEA9848A4EB5EF400ACD438 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FinanceBuddyViewTests;
+			packageProductDependencies = (
+				59028282DD866125A5E71363 /* FinanceBuddyCore */,
+			);
+			productName = FinanceBuddyViewTests;
+			productReference = 70FE44F13877DACCC54853EE /* FinanceBuddyViewTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		DD872EA3F121544FDBFDDD3D /* FinanceBuddyCoreTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 38EEBB65D859C846D66439AB /* Build configuration list for PBXNativeTarget "FinanceBuddyCoreTests" */;
@@ -382,6 +428,9 @@
 					42BF384680035FADE5528E3A = {
 						ProvisioningStyle = Automatic;
 					};
+					6EB6BB8CADC0CEDD4CBD5AEB = {
+						ProvisioningStyle = Automatic;
+					};
 					DD872EA3F121544FDBFDDD3D = {
 						ProvisioningStyle = Automatic;
 					};
@@ -408,6 +457,7 @@
 				42BF384680035FADE5528E3A /* FinanceBuddy */,
 				DD872EA3F121544FDBFDDD3D /* FinanceBuddyCoreTests */,
 				3CDA234336559F95BB416F3E /* FinanceBuddyUITests */,
+				6EB6BB8CADC0CEDD4CBD5AEB /* FinanceBuddyViewTests */,
 			);
 		};
 /* End PBXProject section */
@@ -459,10 +509,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E7595907F3DAAFAFF47E70ED /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4BF8D5E8B01E995CC53F5B61 /* ChartDatum.swift in Sources */,
+				E23C47B185F0E1670F7DCEA8 /* ChartDescriptorTests.swift in Sources */,
+				D5BA7B157A9DAB1D0A181E25 /* FinanceChartDescriptor.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F00F56A1F4C7B79CBDF9429E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A64CD0F83E6E58560B480C8 /* AccessibilityFlowTests.swift in Sources */,
 				92C587E5CE7FB21D0473A138 /* FinanceBuddyUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -585,6 +646,22 @@
 			};
 			name = Release;
 		};
+		4FCD6C0D2FC0315065E03E24 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.guillermorebolledo.FinanceBuddyViewTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		5420F0DC2FDD59D8A47F7932 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -600,6 +677,22 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
+		};
+		7501C275793B14F58222C674 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.guillermorebolledo.FinanceBuddyViewTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
 		};
 		838A19CA30EFACB084EA0D90 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -772,6 +865,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
+		BAB873462618F0D7D38B9B55 /* Build configuration list for PBXNativeTarget "FinanceBuddyViewTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7501C275793B14F58222C674 /* Debug */,
+				4FCD6C0D2FC0315065E03E24 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
@@ -805,6 +907,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EA80CBFDC719A2882D0FBA45 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignInSwift;
+		};
+		59028282DD866125A5E71363 /* FinanceBuddyCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FinanceBuddyCore;
 		};
 		85A8CFE3F4ACD3E3E9171FA6 /* GoogleSignIn */ = {
 			isa = XCSwiftPackageProductDependency;

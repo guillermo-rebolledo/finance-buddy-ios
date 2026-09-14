@@ -33,12 +33,9 @@ struct PeriodPicker: View {
         ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8)) : AnyLayout(HStackLayout())
       actions {
         Button(action: jump) {
-          Label {
-            Text("Jump to date").fixedSize(horizontal: false, vertical: true)
-          } icon: {
-            Image(systemName: "calendar")
-          }
-          .frame(minHeight: 44).contentShape(Rectangle())
+          Text("Jump to date")
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(minHeight: 44).contentShape(Rectangle())
         }.disabled(store.summary == nil)
         if !typeSize.isAccessibilitySize { Spacer() }
         if store.summary?.containsToday == false

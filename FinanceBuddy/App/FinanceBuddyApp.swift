@@ -30,11 +30,31 @@ import SwiftUI
   }
   var body: some Scene {
     WindowGroup {
-      RootView(session: session)
+      Group {
         #if DEBUG
-          .modifier(DebugFixtureAppearance())
+          if let previewScreen {
+            ScreenPreview(previewScreen)
+          } else {
+            RootView(session: session)
+          }
+        #else
+          RootView(session: session)
         #endif
-        .onOpenURL { GIDSignIn.sharedInstance.handle($0) }
+      }
+      #if DEBUG
+        .modifier(DebugFixtureAppearance())
+      #endif
+      .onOpenURL { GIDSignIn.sharedInstance.handle($0) }
     }
   }
+  #if DEBUG
+    private var previewScreen: PreviewScreen? {
+      let arguments = ProcessInfo.processInfo.arguments
+      guard arguments.contains("-useFakeAPI"),
+        let index = arguments.firstIndex(of: "-previewScreen"),
+        arguments.indices.contains(index + 1)
+      else { return nil }
+      return PreviewScreen(rawValue: arguments[index + 1])
+    }
+  #endif
 }

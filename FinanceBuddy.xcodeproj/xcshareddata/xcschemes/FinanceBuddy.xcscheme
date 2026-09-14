@@ -55,6 +55,17 @@
             parallelizable = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "6EB6BB8CADC0CEDD4CBD5AEB"
+               BuildableName = "FinanceBuddyViewTests.xctest"
+               BlueprintName = "FinanceBuddyViewTests"
+               ReferencedContainer = "container:FinanceBuddy.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "3CDA234336559F95BB416F3E"
                BuildableName = "FinanceBuddyUITests.xctest"
                BlueprintName = "FinanceBuddyUITests"

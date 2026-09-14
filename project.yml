@@ -61,10 +61,23 @@ targets:
       base:
         GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: com.guillermorebolledo.FinanceBuddyUITests
+  FinanceBuddyViewTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - FinanceBuddyViewTests
+      - FinanceBuddy/Dashboard/FinanceChartDescriptor.swift
+      - FinanceBuddy/Dashboard/ChartDatum.swift
+    dependencies:
+      - package: FinanceBuddyCore
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.guillermorebolledo.FinanceBuddyViewTests
 schemes:
   FinanceBuddy:
     build:
       targets:
         FinanceBuddy: all
     test:
-      targets: [FinanceBuddyCoreTests, FinanceBuddyUITests]
+      targets: [FinanceBuddyCoreTests, FinanceBuddyViewTests, FinanceBuddyUITests]
