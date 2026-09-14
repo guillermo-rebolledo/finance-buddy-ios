@@ -1,6 +1,6 @@
 # Finance Buddy for iPhone
 
-A native client for the existing Finance Buddy journal. Swift 6, SwiftUI, Observation, iOS 17+, and the same HTTP API as the website. The production origin is `https://finance-buddy-self.vercel.app`.
+A native client for the existing Finance Buddy journal. Swift 6, SwiftUI, Observation, iOS 17+, and the same HTTP API as the website. The production origin is `https://financebuddy.tech`.
 
 ## Open and run
 

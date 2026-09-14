@@ -23,7 +23,7 @@ import SwiftUI
   private static func liveClient() -> LiveAPIClient {
     let origin =
       Bundle.main.object(forInfoDictionaryKey: "API_BASE_URL") as? String
-      ?? "https://finance-buddy-self.vercel.app"
+      ?? "https://financebuddy.tech"
     let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "1"
     return LiveAPIClient(
       baseURL: URL(string: origin)!, build: build, tokens: KeychainTokenStorage())

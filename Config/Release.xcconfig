@@ -1,4 +1,4 @@
-API_BASE_URL = https:/$()/finance-buddy-self.vercel.app
+API_BASE_URL = https:/$()/financebuddy.tech
 GOOGLE_IOS_CLIENT_ID = configure-ios-client.apps.googleusercontent.com
 GOOGLE_SERVER_CLIENT_ID = configure-web-client.apps.googleusercontent.com
 GOOGLE_REVERSED_CLIENT_ID = com.googleusercontent.apps.configure-ios-client
