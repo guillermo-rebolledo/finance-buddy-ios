@@ -14,7 +14,6 @@ struct CategoriesView: View {
   }
   var body: some View {
     List {
-      if store.loading { LoadingView(title: "Loading categories…") }
       if let lists = store.lists {
         categorySection(.income, categories: lists.income.filter { $0.active != false })
         categorySection(.expense, categories: lists.expense.filter { $0.active != false })
@@ -23,8 +22,14 @@ struct CategoriesView: View {
           if archived.isEmpty { Text("No archived categories").foregroundStyle(.secondary) }
           ForEach(archived) { row($0) }
         }
+      } else if store.loading {
+        Group {
+          categorySection(.income, categories: Fixtures.categories.income)
+          categorySection(.expense, categories: Fixtures.categories.expense)
+        }.redacted(reason: .placeholder).disabled(true).accessibilityHidden(true)
       }
     }.listStyle(.insetGrouped).navigationTitle("Categories")
+      .smoothChanges(store.lists?.all)
       .task { await store.load(); showResult(includeSuccess: false) }
       .refreshable { await store.load(); showResult(includeSuccess: false) }
       .sheet(item: $editor) { model in

@@ -10,43 +10,19 @@ struct EntriesView: View {
   var body: some View {
     List {
       Section { PeriodPicker(store: period) }
-      if let summary = period.summary {
+      if period.showsPlaceholder {
+        entrySections(Fixtures.entries, headers: true)
+          .redacted(reason: .placeholder).disabled(true).accessibilityHidden(true)
+      } else if let summary = period.summary {
         if summary.entries.isEmpty {
           ContentUnavailableView(
             "No entries in this period", systemImage: "book.closed",
             description: Text("Record income, an expense, or a refund to begin."))
         }
-        ForEach(Array(Set(summary.entries.map(\.date))).sorted(by: >), id: \.self) { date in
-          Section {
-            ForEach(summary.entries.filter { $0.date == date }) { entry in
-              Button {
-                edit(entry)
-              } label: {
-                EntryRow(entry: entry)
-              }.buttonStyle(.plain)
-                .accessibilityIdentifier("entry-\(entry.id)")
-                .contextMenu {
-                  Button("Edit", systemImage: "pencil") { edit(entry) }
-                  Button("Delete", systemImage: "trash", role: .destructive) {
-                    deletion = DeletionStore(entry: entry, client: client)
-                  }
-                }
-                .swipeActions(allowsFullSwipe: false) {
-                  Button("Delete", systemImage: "trash") {
-                    deletion = DeletionStore(entry: entry, client: client)
-                  }.tint(.red).disabled(client.access.offline)
-                }
-            }
-          } header: {
-            if summary.kind != .day { Text(date.formatted("EEEE, MMM d")) }
-          }
-        }
-      } else if period.loading {
-        ForEach(Fixtures.entries) {
-          EntryRow(entry: $0).redacted(reason: .placeholder).accessibilityHidden(true)
-        }
+        entrySections(summary.entries, headers: summary.kind != .day)
       }
     }.listStyle(.insetGrouped).navigationTitle("Entries")
+      .smoothChanges(period.showsPlaceholder ? nil : period.summary?.entries.map(\.id))
       .toolbar {
         ToolbarItem(placement: .primaryAction) {
           Button("Add entry", systemImage: "plus") { edit(nil) }.disabled(
@@ -66,6 +42,33 @@ struct EntriesView: View {
       }
       .toast($notification)
       .sensoryFeedback(.success, trigger: notification?.id) { _, value in value != nil }
+  }
+  private func entrySections(_ entries: [JournalEntry], headers: Bool) -> some View {
+    ForEach(Array(Set(entries.map(\.date))).sorted(by: >), id: \.self) { date in
+      Section {
+        ForEach(entries.filter { $0.date == date }) { entry in
+          Button {
+            edit(entry)
+          } label: {
+            EntryRow(entry: entry)
+          }.buttonStyle(.plain)
+            .accessibilityIdentifier("entry-\(entry.id)")
+            .contextMenu {
+              Button("Edit", systemImage: "pencil") { edit(entry) }
+              Button("Delete", systemImage: "trash", role: .destructive) {
+                deletion = DeletionStore(entry: entry, client: client)
+              }
+            }
+            .swipeActions(allowsFullSwipe: false) {
+              Button("Delete", systemImage: "trash") {
+                deletion = DeletionStore(entry: entry, client: client)
+              }.tint(.red).disabled(client.access.offline)
+            }
+        }
+      } header: {
+        if headers { Text(date.formatted("EEEE, MMM d")) }
+      }
+    }
   }
   private func entrySaved(_ date: CalendarDate) {
     if period.summary?.contains(date) == false {

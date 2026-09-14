@@ -32,4 +32,23 @@ import Testing
     #expect(store.summary?.start == start)
     #expect(store.failureMessage?.contains("still describe This week") == true)
   }
+  @Test func placeholderCoversFirstLoadAndPeriodSwitchOnly() async {
+    let api = FakeAPIClient()
+    let store = PeriodStore(client: api)
+    #expect(store.showsPlaceholder)
+    await store.refresh(dashboard: true)
+    #expect(!store.showsPlaceholder)
+    var pending: CheckedContinuation<Summary, Never>?
+    api.summaryHandler = { selection in await withCheckedContinuation { pending = $0 } }
+    let sameRefresh = Task { await store.refresh() }
+    while pending == nil { await Task.yield() }
+    #expect(store.loading && !store.showsPlaceholder)
+    pending?.resume(returning: Fixtures.summary())
+    await sameRefresh.value
+    api.summaryHandler = nil
+    store.previous()
+    #expect(store.showsPlaceholder)
+    await store.refresh(dashboard: true)
+    #expect(!store.showsPlaceholder)
+  }
 }
