@@ -4,7 +4,8 @@ final class AccessibilityFlowTests: XCTestCase {
   @MainActor func testAdditionalScreensAtLargestTextSize() throws {
     let app = XCUIApplication()
     for screen in [
-      "editor", "categoryEditor", "deletion", "export", "unavailable", "upgrade", "signIn",
+      "editor", "categoryEditor", "budgetEditor", "budgets", "deletion", "export", "unavailable",
+      "upgrade", "signIn",
     ] {
       app.launchArguments = ["-useFakeAPI", "-largestType", "-dark", "-previewScreen", screen]
       app.launch()
@@ -36,6 +37,10 @@ final class AccessibilityFlowTests: XCTestCase {
     app.swipeUp()
     try audit(app, "Entry editor bottom")
     app.buttons["Cancel"].tap()
+
+    app.tabBars.buttons["Budgets"].tap()
+    XCTAssertTrue(app.buttons["budget-day"].waitForExistence(timeout: 5))
+    try audit(app, "Budgets")
 
     app.tabBars.buttons["Categories"].tap()
     try audit(app, "Categories")

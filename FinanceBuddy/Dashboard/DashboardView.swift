@@ -4,11 +4,13 @@ import SwiftUI
 struct DashboardView: View {
   @Bindable var period: PeriodStore
   let client: any APIClient
+  let showBudgets: () -> Void
   @State private var export: ExportStore
   @State private var showingExport = false
-  init(period: PeriodStore, client: any APIClient) {
+  init(period: PeriodStore, client: any APIClient, showBudgets: @escaping () -> Void) {
     self.period = period
     self.client = client
+    self.showBudgets = showBudgets
     _export = State(initialValue: ExportStore(client: client))
   }
   var body: some View {
@@ -24,6 +26,7 @@ struct DashboardView: View {
         } header: {
           Text("Recorded activity for this period")
         }
+        budgetSection(summary)
         Section("Spending by category") {
           if summary.breakdown.isEmpty {
             Text("No expenses or refunds in this period.").foregroundStyle(.secondary)
@@ -95,6 +98,7 @@ struct DashboardView: View {
       } header: {
         Text("Recorded activity for this period")
       }
+      budgetSection(Fixtures.summary())
       Section("Spending by category") {
         ForEach(["Groceries", "Dining", "Transport"], id: \.self) { total($0, Money(1000)) }
       }
@@ -113,6 +117,25 @@ struct DashboardView: View {
         }
       }
     }.redacted(reason: .placeholder).accessibilityHidden(true)
+  }
+  /// The selected period's budget, read-only: budgets are set and changed on the Budgets tab.
+  private func budgetSection(_ summary: Summary) -> some View {
+    Section {
+      Text(
+        summary.budget.map { budget in
+          "\(budget.source) budget."
+            + (summary.end < summary.today
+              ? " It ended \(budget.overBudget ? "over" : "under") budget." : "")
+        } ?? "No budget for this \(summary.kind.rawValue)."
+      ).foregroundStyle(.secondary)
+      if let budget = summary.budget {
+        BudgetFigures(budget: budget, today: summary.today).padding(.vertical, 4)
+      }
+      Button("Budgets", systemImage: "wallet.pass", action: showBudgets)
+        .frame(minHeight: 44).accessibilityIdentifier("dashboardBudgets")
+    } header: {
+      Text("Budget")
+    }
   }
   private func startExport(_ kind: ExportStore.Kind) {
     guard let summary = period.summary else { return }

@@ -40,7 +40,8 @@ import Observation
     access.sessionGeneration += 1
   }
   private func request(
-    _ path: String, method: String = "GET", body: Data? = nil, period: PeriodSelection? = nil
+    _ path: String, method: String = "GET", body: Data? = nil, period: PeriodSelection? = nil,
+    query: [URLQueryItem] = []
   ) async throws -> (Data, HTTPURLResponse) {
     guard !access.upgradeRequired else {
       throw Refusal(.upgradeRequired, message: "Update Finance Buddy to continue.")
@@ -48,16 +49,16 @@ import Observation
     if access.offline && method != "GET" { throw ClientError.offline }
     var components = URLComponents(
       url: baseURL.appending(path: path), resolvingAgainstBaseURL: false)!
+    var items = query
     if let period {
-      var items: [URLQueryItem] = []
       if period.kind != .week || period.date != nil {
         items.append(URLQueryItem(name: "kind", value: period.kind.rawValue))
       }
       if let date = period.date {
         items.append(URLQueryItem(name: "date", value: date.description))
       }
-      components.queryItems = items.isEmpty ? nil : items
     }
+    components.queryItems = items.isEmpty ? nil : items
     var request = URLRequest(url: components.url!)
     request.httpMethod = method
     request.httpBody = body
@@ -88,20 +89,29 @@ import Observation
     }
     return (data, http)
   }
-  private func decode<T: Decodable>(_ type: T.Type, path: String, period: PeriodSelection? = nil)
-    async throws -> T
-  {
-    let (data, _) = try await request(path, period: period)
+  private func decode<T: Decodable>(
+    _ type: T.Type, path: String, period: PeriodSelection? = nil, query: [URLQueryItem] = []
+  ) async throws -> T {
+    let (data, _) = try await request(path, period: period, query: query)
     return try JSONDecoder().decode(type, from: data)
   }
-  private func write<T: Encodable>(
-    _ body: T, path: String, method: String = "POST", successKey: String = "saved"
-  ) async throws {
+  @discardableResult private func write<T: Encodable>(
+    _ body: T, path: String, method: String = "POST", successKey: String = "saved",
+    period: PeriodSelection? = nil
+  ) async throws -> Data {
     let encoder = JSONEncoder()
     encoder.outputFormatting = .sortedKeys
-    let (data, _) = try await request(path, method: method, body: encoder.encode(body))
+    let (data, _) = try await request(
+      path, method: method, body: encoder.encode(body), period: period)
     let object = try JSONSerialization.jsonObject(with: data) as? [String: Any]
     guard object?[successKey] as? Bool == true else { throw ClientError.invalidResponse }
+    return data
+  }
+  /// The budget a confirmed write replies with. The write is confirmed by its success key, so an
+  /// unreadable budget is left out rather than turning a saved change into an unconfirmed one.
+  private struct BudgetReply: Decodable { let budget: BudgetView? }
+  private func budget(in data: Data) -> BudgetView? {
+    (try? JSONDecoder().decode(BudgetReply.self, from: data))?.budget
   }
   public func session() async throws -> SessionReply? {
     let reply = try await decode(SessionReply?.self, path: "api/auth/get-session")
@@ -144,8 +154,8 @@ import Observation
   public func trends(_ period: PeriodSelection) async throws -> Trends {
     try await decode(Trends.self, path: "api/journal/trends", period: period)
   }
-  public func save(_ entry: EntryRequest, correcting: Bool) async throws {
-    try await write(entry, path: "api/journal", method: correcting ? "PATCH" : "POST")
+  public func save(_ entry: EntryRequest, correcting: Bool) async throws -> BudgetView? {
+    budget(in: try await write(entry, path: "api/journal", method: correcting ? "PATCH" : "POST"))
   }
   public func delete(id: String) async throws {
     try await write(["id": id], path: "api/journal", method: "DELETE")
@@ -173,5 +183,22 @@ import Observation
       "api/journal/spreadsheet", method: "POST", body: JSONEncoder().encode(["id": id]),
       period: period)
     return try JSONDecoder().decode(Spreadsheet.self, from: data)
+  }
+  public func budgets(before: String?) async throws -> BudgetList {
+    try await decode(
+      BudgetList.self, path: "api/budgets",
+      query: before.map { [URLQueryItem(name: "before", value: $0)] } ?? [])
+  }
+  public func setBudget(_ period: PeriodSelection, _ request: BudgetRequest) async throws
+    -> BudgetView?
+  {
+    budget(in: try await write(request, path: "api/budgets", method: "PUT", period: period))
+  }
+  public func removeBudget(_ period: PeriodSelection, scope: BudgetRemovalScope) async throws
+    -> BudgetView?
+  {
+    budget(
+      in: try await write(
+        ["scope": scope.rawValue], path: "api/budgets", method: "DELETE", period: period))
   }
 }

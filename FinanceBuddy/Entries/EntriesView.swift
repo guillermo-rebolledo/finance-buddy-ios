@@ -70,15 +70,17 @@ struct EntriesView: View {
       }
     }
   }
-  private func entrySaved(_ date: CalendarDate) {
+  private func entrySaved(_ date: CalendarDate, budget: BudgetView?) {
+    // The reply names the budget the entry counts against: "MXN 1,240.00 left this week".
+    let line = budget.map { " \($0.line(today: period.summary?.today ?? date))." } ?? ""
     if period.summary?.contains(date) == false {
       notification = ToastMessage(
-        text: "Entry saved outside the period you are viewing.", actionTitle: "Show"
+        text: "Entry saved outside the period you are viewing." + line, actionTitle: "Show"
       ) {
         period.select(.init(kind: period.selection.kind, date: date))
       }
     } else {
-      notification = ToastMessage(text: "Entry saved.")
+      notification = ToastMessage(text: "Entry saved." + line)
     }
     Task { await period.refresh(dashboard: true) }
   }

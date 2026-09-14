@@ -4,14 +4,17 @@ import SwiftUI
 struct EntryEditorView: View {
   @Bindable var store: EntryEditorStore
   let offline: Bool
-  let onSaved: (CalendarDate) -> Void
+  let onSaved: (CalendarDate, BudgetView?) -> Void
   @Environment(\.dismiss) private var dismiss
   @Environment(\.dynamicTypeSize) private var typeSize
   @State private var pickerDate: Date
   @State private var discard = false
   @State private var notification: ToastMessage?
   @FocusState private var focused: String?
-  init(store: EntryEditorStore, offline: Bool, onSaved: @escaping (CalendarDate) -> Void) {
+  init(
+    store: EntryEditorStore, offline: Bool,
+    onSaved: @escaping (CalendarDate, BudgetView?) -> Void
+  ) {
     self.store = store
     self.offline = offline
     self.onSaved = onSaved
@@ -130,7 +133,7 @@ struct EntryEditorView: View {
       .onChange(of: store.field) { _, field in focused = field }
       .onChange(of: store.saved) { _, saved in
         if saved {
-          onSaved(store.date)
+          onSaved(store.date, store.savedBudget)
           dismiss()
         }
       }

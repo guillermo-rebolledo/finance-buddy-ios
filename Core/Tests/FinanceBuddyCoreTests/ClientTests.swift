@@ -84,6 +84,20 @@ final class StubProtocol: URLProtocol, @unchecked Sendable {
           #expect(object?["amount"] as? String == "20.00")
           #expect(object?["categoryId"] is NSNull)
         }
+        if request.url?.path == "/api/budgets" {
+          let query = URLComponents(url: request.url!, resolvingAgainstBaseURL: false)!.queryItems
+          #expect(
+            query == [
+              URLQueryItem(name: "kind", value: "month"),
+              URLQueryItem(name: "date", value: "2026-09-13"),
+            ])
+          if request.httpMethod == "PUT" {
+            #expect(object?["amount"] as? String == "0.00")
+            #expect(object?["oneOff"] as? Bool == true)
+          } else {
+            #expect(object?["scope"] as? String == "onward")
+          }
+        }
       }
       let path = request.url!.path
       let data: Data
@@ -93,6 +107,11 @@ final class StubProtocol: URLProtocol, @unchecked Sendable {
         data = try! JSONEncoder().encode(Fixtures.trends())
       } else if path == "/api/categories" && request.httpMethod == "GET" {
         data = try! JSONEncoder().encode(Fixtures.categories)
+      } else if path == "/api/budgets" && request.httpMethod == "GET" {
+        #expect(request.url?.query == "before=2026-09-06_week")
+        data = try! JSONEncoder().encode(Fixtures.budgetList())
+      } else if path == "/api/budgets" {
+        data = Data(#"{"saved":true,"budget":null}"#.utf8)
       } else if path == "/api/auth/get-session" {
         data = try! JSONEncoder().encode(Fixtures.session)
       } else if path == "/api/journal/spreadsheet" {
@@ -118,8 +137,12 @@ final class StubProtocol: URLProtocol, @unchecked Sendable {
     let entry = EntryRequest(
       id: UUID().uuidString, kind: .expense, amount: Money(20), date: Fixtures.today,
       categoryId: nil, note: "")
-    try await client.save(entry, correcting: false)
-    try await client.save(entry, correcting: true)
+    #expect(try await client.save(entry, correcting: false) == nil)
+    #expect(try await client.save(entry, correcting: true) == nil)
+    #expect(try await client.budgets(before: "2026-09-06_week").now.week != nil)
+    let month = PeriodSelection(kind: .month, date: Fixtures.today)
+    #expect(try await client.setBudget(month, BudgetRequest(amount: .zero, oneOff: true)) == nil)
+    #expect(try await client.removeBudget(month, scope: .onward) == nil)
     try await client.delete(id: entry.id)
     try await client.changeCategory(
       CategoryRequest(action: .create, id: UUID().uuidString, kind: .income, name: "Gift"))
@@ -216,6 +239,25 @@ final class StubProtocol: URLProtocol, @unchecked Sendable {
     await #expect(throws: Refusal.self) { try await expired.summary(.init()) }
     #expect(expiredTokens.token == nil)
     #expect(expired.access.signedOut)
+  }
+  @Test func saveReplyCarriesBudgetAndUnreadableBudgetLeavesSaveConfirmed() async throws {
+    let view = Fixtures.summary().budget!
+    let (client, _) = makeClient { _ in
+      (
+        200, [:],
+        try! JSONSerialization.data(withJSONObject: [
+          "saved": true, "budget": try! JSONSerialization.jsonObject(with: JSONEncoder().encode(view)),
+        ])
+      )
+    }
+    let entry = EntryRequest(
+      id: UUID().uuidString, kind: .expense, amount: Money(20), date: Fixtures.today,
+      categoryId: nil, note: "")
+    #expect(try await client.save(entry, correcting: false) == view)
+    let (broken, _) = makeClient { _ in
+      (200, [:], Data(#"{"saved":true,"budget":{"kind":"week"}}"#.utf8))
+    }
+    #expect(try await broken.save(entry, correcting: false) == nil)
   }
   @Test func malformedSuccessDoesNotClaimWriteConfirmed() async {
     let (client, _) = makeClient { _ in (200, [:], Data(#"{"other":true}"#.utf8)) }

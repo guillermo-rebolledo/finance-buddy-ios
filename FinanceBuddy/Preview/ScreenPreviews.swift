@@ -2,7 +2,7 @@ import FinanceBuddyCore
 import SwiftUI
 
 enum PreviewScreen: String {
-  case categoryEditor
+  case categoryEditor, budgetEditor, budgets
   case entries, dashboard, categories, settings, signIn, editor, deletion, export, unavailable,
     upgrade
 }
@@ -29,7 +29,16 @@ struct ScreenPreview: View {
     Group {
       switch screen {
       case .entries: NavigationStack { EntriesView(period: period, client: api) }
-      case .dashboard: NavigationStack { DashboardView(period: period, client: api) }
+      case .dashboard: NavigationStack { DashboardView(period: period, client: api) {} }
+      case .budgets:
+        NavigationStack {
+          BudgetsView(
+            client: api, onChanged: {}, store: BudgetsStore(client: api, list: Fixtures.budgetList()))
+        }
+      case .budgetEditor:
+        BudgetEditorView(
+          store: BudgetEditorStore(client: api, kind: .week, date: Fixtures.today), offline: false
+        ) { _ in }
       case .categories:
         NavigationStack {
           CategoriesView(
@@ -44,7 +53,7 @@ struct ScreenPreview: View {
           store: EntryEditorStore(
             client: api, today: Fixtures.today, categories: Fixtures.categories.all,
             entry: Fixtures.entries[3]), offline: false
-        ) { _ in }
+        ) { _, _ in }
       case .categoryEditor:
         CategoryEditorView(
           store: CategoryEditorStore(client: api, kind: .income, all: Fixtures.categories.all),
@@ -198,6 +207,20 @@ struct ExportPreview: View {
 
 #Preview("dashboard · failedLoad · Accessibility") {
   ScreenPreview(.dashboard, fixture: .failedLoad).dynamicTypeSize(.accessibility5)
+}
+
+#Preview("budgets · Light") { ScreenPreview(.budgets).preferredColorScheme(.light) }
+
+#Preview("budgets · Dark") { ScreenPreview(.budgets).preferredColorScheme(.dark) }
+
+#Preview("budgets · Accessibility") { ScreenPreview(.budgets).dynamicTypeSize(.accessibility5) }
+
+#Preview("Budget editor · Light") { ScreenPreview(.budgetEditor).preferredColorScheme(.light) }
+
+#Preview("Budget editor · Dark") { ScreenPreview(.budgetEditor).preferredColorScheme(.dark) }
+
+#Preview("Budget editor · Accessibility") {
+  ScreenPreview(.budgetEditor).dynamicTypeSize(.accessibility5)
 }
 
 #Preview("Category editor · Light") { ScreenPreview(.categoryEditor).preferredColorScheme(.light) }

@@ -13,6 +13,9 @@ import Foundation
   public var entryRequests: [EntryRequest] = []
   public var categoryRequests: [CategoryRequest] = []
   public var exportRequests: [(PeriodSelection, String)] = []
+  public var budgets = Fixtures.budgets
+  public var budgetRequests: [(PeriodSelection, BudgetRequest)] = []
+  public var removalRequests: [(PeriodSelection, BudgetRemovalScope)] = []
   public init() {}
   public func session() async throws -> SessionReply? {
     if let failure { throw failure }
@@ -35,7 +38,8 @@ import Foundation
     if let summaryHandler { return try await summaryHandler(period) }
     if let transportError { throw transportError }
     if let failure { throw failure }
-    return Fixtures.summary(period, entries: entries, categories: managedCategories.all)
+    return Fixtures.summary(
+      period, entries: entries, categories: managedCategories.all, budgets: budgets)
   }
   public func trends(_ period: PeriodSelection) async throws -> Trends {
     if let trendsHandler { return try await trendsHandler(period) }
@@ -43,7 +47,7 @@ import Foundation
     if let failure { throw failure }
     return Fixtures.trends(period, entries: entries)
   }
-  public func save(_ entry: EntryRequest, correcting: Bool) async throws {
+  public func save(_ entry: EntryRequest, correcting: Bool) async throws -> BudgetView? {
     entryRequests.append(entry)
     if let transportError { throw transportError }
     if let failure { throw failure }
@@ -54,6 +58,83 @@ import Foundation
         categoryId: entry.categoryId,
         category: managedCategories.all.first { $0.id == entry.categoryId }?.name,
         note: entry.note, currency: "MXN"))
+    guard entry.kind != .income else { return nil }
+    return PeriodKind.allCases.lazy.compactMap { self.budget(.init(kind: $0, date: entry.date)) }
+      .first
+  }
+  private func budget(_ period: PeriodSelection) -> BudgetView? {
+    Fixtures.summary(period, entries: entries, categories: managedCategories.all, budgets: budgets)
+      .budget
+  }
+  public func budgets(before: String?) async throws -> BudgetList {
+    if let transportError { throw transportError }
+    if let failure { throw failure }
+    return Fixtures.budgetList(
+      entries: entries, categories: managedCategories.all, budgets: budgets, before: before)
+  }
+  /// The named period's start, refusing one that has ended as the server does.
+  private func changeablePeriod(_ period: PeriodSelection) throws -> CalendarDate {
+    if let transportError { throw transportError }
+    if let failure { throw failure }
+    let resolved = Fixtures.summary(period, entries: [], budgets: [])
+    guard resolved.end >= Fixtures.today else {
+      throw Refusal(
+        .periodEnded, message: "This period has ended, so its budget stays as it was.",
+        status: 409)
+    }
+    return resolved.start
+  }
+  public func setBudget(_ period: PeriodSelection, _ request: BudgetRequest) async throws
+    -> BudgetView?
+  {
+    budgetRequests.append((period, request))
+    let start = try changeablePeriod(period)
+    let kind = period.kind
+    let previous = Fixtures.previousPeriodStart(kind, before: start)
+    budgets.removeAll { $0.kind == kind && !$0.repeats && $0.start == start }
+    if request.oneOff {
+      budgets.append(
+        .init(kind: kind, start: start, until: start, repeats: false, amount: request.amount))
+    } else if let i = budgets.firstIndex(where: { $0.kind == kind && $0.repeats && $0.start == start })
+    {
+      budgets[i].amount = request.amount
+    } else if let i = budgets.firstIndex(where: {
+      $0.kind == kind && $0.repeats && $0.start < start && ($0.until == nil || $0.until! >= start)
+    }) {
+      let until = budgets[i].until
+      budgets[i].until = previous
+      budgets.append(
+        .init(kind: kind, start: start, until: until, repeats: true, amount: request.amount))
+    } else {
+      let next = budgets.filter { $0.kind == kind && $0.repeats && $0.start > start }.map(\.start)
+        .min()
+      budgets.append(
+        .init(
+          kind: kind, start: start,
+          until: next.map { Fixtures.previousPeriodStart(kind, before: $0) }, repeats: true,
+          amount: request.amount))
+    }
+    return budget(period)
+  }
+  public func removeBudget(_ period: PeriodSelection, scope: BudgetRemovalScope) async throws
+    -> BudgetView?
+  {
+    removalRequests.append((period, scope))
+    let start = try changeablePeriod(period)
+    let kind = period.kind
+    switch scope {
+    case .period: budgets.removeAll { $0.kind == kind && !$0.repeats && $0.start == start }
+    case .onward:
+      budgets.removeAll { $0.kind == kind && $0.repeats && $0.start >= start }
+      let previous = Fixtures.previousPeriodStart(kind, before: start)
+      for i in budgets.indices
+      where budgets[i].kind == kind && budgets[i].repeats
+        && (budgets[i].until == nil || budgets[i].until! >= start)
+      {
+        budgets[i].until = previous
+      }
+    }
+    return budget(period)
   }
   public func delete(id: String) async throws {
     if let transportError { throw transportError }
