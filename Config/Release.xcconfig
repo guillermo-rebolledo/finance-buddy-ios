@@ -1,0 +1,6 @@
+API_BASE_URL = https:/$()/finance-buddy-self.vercel.app
+GOOGLE_IOS_CLIENT_ID = configure-ios-client.apps.googleusercontent.com
+GOOGLE_SERVER_CLIENT_ID = configure-web-client.apps.googleusercontent.com
+GOOGLE_REVERSED_CLIENT_ID = com.googleusercontent.apps.configure-ios-client
+#include? "Local.xcconfig"
+INFOPLIST_FILE = Config/Info-Release.plist

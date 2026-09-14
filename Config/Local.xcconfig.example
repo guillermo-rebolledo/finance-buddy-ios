@@ -1,0 +1,4 @@
+// Public OAuth identifiers, never a client secret. Copy to Local.xcconfig.
+GOOGLE_IOS_CLIENT_ID = your-ios-id.apps.googleusercontent.com
+GOOGLE_SERVER_CLIENT_ID = your-web-id.apps.googleusercontent.com
+GOOGLE_REVERSED_CLIENT_ID = com.googleusercontent.apps.your-ios-id
