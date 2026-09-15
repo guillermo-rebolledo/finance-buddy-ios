@@ -79,7 +79,9 @@ import Observation
         data: data, status: http.statusCode, signIn: path == "api/auth/sign-in/social",
         session: path == "api/auth/get-session")
       switch refusal.code {
-      case .unauthenticated, .forbidden: try clearToken()
+      case .unauthenticated: try clearToken()
+      case .forbidden:
+        if path != "api/account" { try clearToken() }
       case .upgradeRequired: access.upgradeRequired = true
       case .requestNotAllowed:
         logger.error("Request integrity refused for \(path, privacy: .public)")
@@ -145,6 +147,19 @@ import Observation
     } catch {
       try clearToken()
       throw error
+    }
+    try clearToken()
+  }
+  public func deleteAccount(appleAuthorizationCode: String?) async throws {
+    let body = try appleAuthorizationCode.map {
+      try JSONEncoder().encode(["appleAuthorizationCode": $0])
+    }
+    do {
+      let (_, response) = try await request("api/account", method: "DELETE", body: body)
+      guard response.statusCode == 204 else { throw ClientError.invalidResponse }
+    } catch let refusal as Refusal where refusal.code == .unauthenticated {
+      // A retry after a lost deletion reply sees the session already gone.
+      return // request already cleared the token.
     }
     try clearToken()
   }

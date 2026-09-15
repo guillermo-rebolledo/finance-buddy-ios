@@ -7,6 +7,8 @@ import Observation
   public private(set) var user: User?
   public var message: String?
   public private(set) var busy = false
+  public private(set) var appleAuthorizationRequired = false
+  public static let deletionFailureMessage = "Nothing was deleted. Please try again."
   public let client: any APIClient
   public init(client: any APIClient) { self.client = client }
   public func restore() async {
@@ -51,6 +53,35 @@ import Observation
     state = .signedOut
     message = "You were signed out. Sign in again to continue."
   }
+  public func deleteAccount(appleAuthorizationCode: String? = nil) async {
+    guard !busy else { return }
+    busy = true
+    message = nil
+    appleAuthorizationRequired = false
+    defer { busy = false }
+    do {
+      try await client.deleteAccount(appleAuthorizationCode: appleAuthorizationCode)
+    } catch let refusal as Refusal where refusal.code == .unauthenticated {
+      do { try client.clearToken() } catch {
+        message = error.localizedDescription
+        return
+      }
+    } catch let refusal as Refusal where refusal.code == .appleAuthorizationRequired {
+      appleAuthorizationRequired = true
+      return
+    } catch {
+      message = Self.deletionFailureMessage
+      return
+    }
+    user = nil
+    state = .signedOut
+    message = "Your account was deleted."
+  }
+
+  public func finishAppleDeletionAuthorization() {
+    appleAuthorizationRequired = false
+  }
+
   public func signOut(everywhere: Bool) async {
     guard !busy else { return }
     busy = true

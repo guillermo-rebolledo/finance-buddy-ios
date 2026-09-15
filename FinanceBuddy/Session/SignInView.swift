@@ -60,6 +60,7 @@ struct SignInView: View {
           }
           if let message = session.message {
             Text(message).foregroundStyle(.secondary).accessibilityIdentifier("signInMessage")
+              .task(id: message) { AccessibilityNotification.Announcement(message).post() }
           }
           Text(
             "Use the same verified email to access your journal with either account. Hide My Email creates a separate journal."

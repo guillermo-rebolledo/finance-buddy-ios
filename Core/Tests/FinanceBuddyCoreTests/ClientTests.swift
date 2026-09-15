@@ -7,33 +7,37 @@ import Testing
 final class StubProtocol: URLProtocol, @unchecked Sendable {
   final class Registry: @unchecked Sendable {
     let lock = NSLock()
-    private var handlers: [String: @Sendable (URLRequest) -> (Int, [String: String], Data)] = [:]
+    private var handlers: [String: @Sendable (URLRequest) throws -> (Int, [String: String], Data)] = [:]
     func register(
-      _ host: String, handler: @escaping @Sendable (URLRequest) -> (Int, [String: String], Data)
+      _ host: String, handler: @escaping @Sendable (URLRequest) throws -> (Int, [String: String], Data)
     ) {
       lock.lock()
       defer { lock.unlock() }
       handlers[host] = handler
     }
-    func reply(_ request: URLRequest) -> (Int, [String: String], Data) {
+    func reply(_ request: URLRequest) throws -> (Int, [String: String], Data) {
       lock.lock()
       let handler = handlers[request.url!.host!]!
       lock.unlock()
-      return handler(request)
+      return try handler(request)
     }
   }
   static let registry = Registry()
   override class func canInit(with request: URLRequest) -> Bool { true }
   override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
   override func startLoading() {
-    let (status, headers, data) = Self.registry.reply(request)
-    client?.urlProtocol(
-      self,
-      didReceive: HTTPURLResponse(
-        url: request.url!, statusCode: status, httpVersion: nil, headerFields: headers)!,
-      cacheStoragePolicy: .notAllowed)
-    client?.urlProtocol(self, didLoad: data)
-    client?.urlProtocolDidFinishLoading(self)
+    do {
+      let (status, headers, data) = try Self.registry.reply(request)
+      client?.urlProtocol(
+        self,
+        didReceive: HTTPURLResponse(
+          url: request.url!, statusCode: status, httpVersion: nil, headerFields: headers)!,
+        cacheStoragePolicy: .notAllowed)
+      client?.urlProtocol(self, didLoad: data)
+      client?.urlProtocolDidFinishLoading(self)
+    } catch {
+      client?.urlProtocol(self, didFailWithError: error)
+    }
   }
   static func body(_ request: URLRequest) -> Data {
     if let body = request.httpBody { return body }
@@ -54,7 +58,7 @@ final class StubProtocol: URLProtocol, @unchecked Sendable {
 @MainActor struct ClientTests {
   func makeClient(
     token: String? = "signed-token",
-    handler: @escaping @Sendable (URLRequest) -> (Int, [String: String], Data)
+    handler: @escaping @Sendable (URLRequest) throws -> (Int, [String: String], Data)
   ) -> (LiveAPIClient, MemoryTokenStorage) {
     let host = UUID().uuidString.lowercased() + ".example.com"
     StubProtocol.registry.register(host, handler: handler)

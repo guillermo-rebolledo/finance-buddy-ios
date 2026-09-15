@@ -4,7 +4,10 @@ import SwiftUI
 
 struct SettingsView: View {
   @Bindable var session: SessionStore
+  @Environment(\.dynamicTypeSize) private var dynamicTypeSize
   @State private var confirmEverywhere = false
+  @State private var confirmDeletion = false
+  @State private var deletionConfirmed = false
   @State private var browser: BrowserDestination?
   var body: some View {
     Form {
@@ -49,6 +52,16 @@ struct SettingsView: View {
             .frame(minHeight: 44)
         }.accessibilityIdentifier("support")
       }
+      Section("Delete Account") {
+        Button("Delete Account", role: .destructive) { confirmDeletion = true }
+          .frame(minHeight: 44)
+          .disabled(session.busy || session.client.access.offline)
+          .accessibilityIdentifier("deleteAccount")
+        if let message = session.message {
+          Text(message).fixedSize(horizontal: false, vertical: true)
+            .task(id: message) { AccessibilityNotification.Announcement(message).post() }
+        }
+      }
     }.navigationTitle("Settings")
       .confirmationDialog(
         "Sign out everywhere?", isPresented: $confirmEverywhere, titleVisibility: .visible
@@ -64,6 +77,19 @@ struct SettingsView: View {
         Text(
           "Every session ends, including this phone and any browser signed in to Finance Buddy. Each device has to sign in again. Your journal is unchanged."
         )
+      }
+      .sheet(isPresented: $confirmDeletion, onDismiss: {
+        guard deletionConfirmed else { return }
+        deletionConfirmed = false
+        Task {
+          await session.deleteAccount()
+          if session.state == .signedOut { GIDSignIn.sharedInstance.signOut() }
+        }
+      }) {
+        DeleteAccountView(disabled: session.busy || session.client.access.offline) {
+          deletionConfirmed = true
+          confirmDeletion = false
+        }.dynamicTypeSize(dynamicTypeSize)
       }
       .sheet(item: $browser) { SafariView(url: $0.url) }
   }

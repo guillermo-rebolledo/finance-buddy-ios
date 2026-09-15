@@ -2,6 +2,34 @@ import AppIntents
 import XCTest
 
 final class FinanceBuddyUITests: XCTestCase {
+  @MainActor func testAccountDeletionAndCancellation() {
+    let app = XCUIApplication()
+    app.launchArguments = ["-useFakeAPI"]
+    app.launch()
+    app.tabBars.buttons["Settings"].tap()
+    let delete = app.buttons["deleteAccount"]
+    for _ in 0..<5 where !delete.isHittable { app.swipeUp() }
+    delete.tap()
+    XCTAssertTrue(app.buttons["Keep Account"].waitForExistence(timeout: 5))
+    app.buttons["Keep Account"].tap()
+    XCTAssertTrue(app.tabBars.buttons["Settings"].exists)
+    delete.tap()
+    app.buttons["Delete Permanently"].tap()
+    XCTAssertTrue(app.staticTexts["Your account was deleted."].waitForExistence(timeout: 5))
+    XCTAssertTrue(app.buttons["Continue with Google"].exists)
+  }
+
+  @MainActor func testAccountDeletionDisabledOffline() {
+    let app = XCUIApplication()
+    app.launchArguments = ["-useFakeAPI", "-offline"]
+    app.launch()
+    app.tabBars.buttons["Settings"].tap()
+    let delete = app.buttons["deleteAccount"]
+    for _ in 0..<5 where !delete.isHittable { app.swipeUp() }
+    XCTAssertTrue(delete.exists)
+    XCTAssertFalse(delete.isEnabled)
+  }
+
   @MainActor func testPrivacyAndSupportBrowsers() {
     let app = XCUIApplication()
     let closeBrowser = app.buttons.matching(
