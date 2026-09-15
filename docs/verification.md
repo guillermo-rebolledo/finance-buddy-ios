@@ -54,8 +54,4 @@ The broad exploratory contrast/font audit reported system-control findings on bo
 
 ## Remaining before completion
 
-- Complete the backend's `docs/verification.md` iPhone checklist against a deployment, including physical-device behavior, verified-account sign-in and separate-account isolation, session revocation, exports, and refusal recovery.
-- Complete live PDF/Sheets checks. The owner has confirmed entry/category mutation and figure parity separately; simulator fixture tests do not establish export behavior.
-- Physical VoiceOver navigation and audible Audio Graph playback remain pending at the owner's request. Simulator audits and descriptor tests are not a substitute for listening to and navigating the app on a device.
-
-The backend source and web app are unchanged. Its verification checklist remains the authoritative deployment checklist.
+All remaining deployment, live PDF/Sheets, physical VoiceOver and audible Audio Graph checks are consolidated in the [TestFlight production checklist](app-store-submission.md#testflight-production-checklist). The backend's verification checklist remains authoritative for the deployment. Prior owner confirmations above do not establish that a new TestFlight build has passed.

@@ -23,7 +23,7 @@ try await GIDSignIn.sharedInstance.signIn(
 
 `GIDConfiguration` supplies `serverClientID` using the web client ID. The app sends the Google ID token with the same fresh nonce to the backend. Only `set-auth-token` is saved to Keychain; the response body's unsigned token is never used. Run a normally signed simulator build: disabling code signing can prevent Keychain access.
 
-For a physical development device, select your Apple development team in Xcode. Debug connects to production by default because localhost on a phone is the phone itself. To use a development backend, set `API_BASE_URL[sdk=iphoneos*]` to a reachable HTTPS origin in `Config/Local.xcconfig`; see the example file for xcconfig URL syntax. Rebuild and run after changing the origin. App Store distribution is outside this project’s scope.
+For a physical development device, the signing team is recorded in `project.yml`. Debug connects to production by default because localhost on a phone is the phone itself. To use a development backend, set `API_BASE_URL[sdk=iphoneos*]` to a reachable HTTPS origin in `Config/Local.xcconfig`; see the example file for xcconfig URL syntax. Rebuild and run after changing the origin. App Store preparation and owner setup are covered in the [submission kit](docs/app-store-submission.md).
 
 ## Sign in with Apple
 
