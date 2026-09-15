@@ -53,7 +53,18 @@ import Testing
       client: api, today: Fixtures.today, categories: Fixtures.categories.all)
     #expect(new.choices.contains { $0.active == false } == false)
   }
-  @Test(arguments: ["0", "-1", "1.234", "1000000000000", "1e3", "1,000"])
+  @Test func maskedAmountSavesWithoutGrouping() async throws {
+    let api = FakeAPIClient()
+    let store = EntryEditorStore(client: api, today: Fixtures.today, categories: [])
+    store.amount = "1,234.50"
+    await store.save()
+    #expect(api.entryRequests[0].amount == (try Money(string: "1234.50")))
+    let edit = EntryEditorStore(
+      client: api, today: Fixtures.today, categories: [], entry: Fixtures.entries[0])
+    #expect(edit.amount == Money.mask(Fixtures.entries[0].amount.wire))
+    #expect(edit.dirty == false)
+  }
+  @Test(arguments: ["0", "-1", "1.234", "1000000000000", "1e3", "1.2.3"])
   func invalidAmountsAreRefused(amount: String) {
     let store = EntryEditorStore(client: FakeAPIClient(), today: Fixtures.today, categories: [])
     store.amount = amount

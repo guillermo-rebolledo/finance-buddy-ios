@@ -17,6 +17,16 @@ struct ValueTests {
     }
     #expect(throws: (any Error).self) { try Money(string: "1e5") }
   }
+  @Test func amountMaskFillsCentsFromTheRight() {
+    #expect(Money.mask("") == "")
+    #expect(Money.mask("4") == "0.04")
+    #expect(Money.mask("42.50") == "42.50")
+    #expect(Money.mask("42.5") == "4.25")
+    #expect(Money.mask("0.0") == "")
+    #expect(Money.mask("123456") == "1,234.56")
+    #expect(Money.mask("1,234.567") == "12,345.67")
+    #expect(Money.mask(String(repeating: "9", count: 15)) == "999,999,999,999.99")
+  }
   @Test(arguments: [
     ("2026-12-31", "2027-01-01"), ("2026-01-31", "2026-02-01"), ("2024-02-28", "2024-02-29"),
     ("2024-02-29", "2024-03-01"),

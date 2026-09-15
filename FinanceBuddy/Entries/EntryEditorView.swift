@@ -38,9 +38,22 @@ struct EntryEditorView: View {
         Section {
           HStack(alignment: .firstTextBaseline) {
             Text("MXN").foregroundStyle(.secondary)
-            TextField("Amount", text: $store.amount).keyboardType(.decimalPad).focused(
-              $focused, equals: "amount"
-            ).accessibilityIdentifier("entryAmount")
+            // Cents-first: the field holds only digits and the overlay shows them masked, so
+            // SwiftUI never rewrites the text under the caret while typing.
+            TextField(
+              "Amount",
+              text: Binding(
+                get: { String(store.amount.filter(\.isNumber).drop { $0 == "0" }) },
+                set: { store.amount = Money.mask($0) }),
+              prompt: Text("")
+            )
+            .keyboardType(.numberPad).foregroundStyle(.clear).tint(.clear)
+            .overlay(alignment: .leading) {
+              Text(store.amount.isEmpty ? "0.00" : store.amount)
+                .foregroundStyle(store.amount.isEmpty ? .tertiary : .primary)
+            }
+            .accessibilityValue(store.amount.isEmpty ? "0.00" : store.amount)
+            .focused($focused, equals: "amount").accessibilityIdentifier("entryAmount")
           }
 
         } header: {

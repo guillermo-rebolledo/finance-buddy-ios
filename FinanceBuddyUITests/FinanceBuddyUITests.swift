@@ -72,7 +72,7 @@ final class FinanceBuddyUITests: XCTestCase {
     let amount = app.textFields["entryAmount"]
     XCTAssertTrue(amount.waitForExistence(timeout: 5))
     amount.tap()
-    amount.typeText("42.50")
+    amount.typeText("4250")
     app.buttons["saveEntry"].tap()
     XCTAssertTrue(
       app.staticTexts["Entry saved. MXN 427.50 left this week."].waitForExistence(timeout: 5))
@@ -84,9 +84,9 @@ final class FinanceBuddyUITests: XCTestCase {
     amount.press(forDuration: 1.2)
     if app.menuItems["Select All"].waitForExistence(timeout: 2) {
       app.menuItems["Select All"].tap()
-      amount.typeText("51.25")
+      amount.typeText("5125")
     } else {
-      amount.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 5) + "51.25")
+      amount.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 5) + "5125")
     }
     app.buttons["saveEntry"].tap()
     let edited = app.buttons.containing(.staticText, identifier: "MXN 51.25").firstMatch
