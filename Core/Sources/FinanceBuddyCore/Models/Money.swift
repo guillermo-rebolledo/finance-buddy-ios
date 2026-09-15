@@ -33,6 +33,13 @@ public struct Money: Codable, Hashable, Sendable {
     return
       "\(value < 0 ? "-" : showPlus && value > 0 ? "+" : "")MXN \(f.string(from: NSDecimalNumber(decimal: magnitude))!)"
   }
+  /// Cents-first amount input: digits fill from the right, so typing 4250 shows "42.50".
+  /// Other characters are ignored and at most 14 digits (999,999,999,999.99) are kept.
+  public static func mask(_ text: String) -> String {
+    let digits = text.filter { ("0"..."9").contains($0) }.drop { $0 == "0" }.prefix(14)
+    guard !digits.isEmpty, let cents = Decimal(string: String(digits)) else { return "" }
+    return String(Money(cents / 100).formatted().dropFirst("MXN ".count))
+  }
   public func signed(for kind: MovementKind) -> Self { Self(kind == .refund ? -value : value) }
   public init(from decoder: any Decoder) throws {
     try self.init(string: decoder.singleValueContainer().decode(String.self))

@@ -28,14 +28,16 @@ import Observation
     self.categories = categories
     original = entry
     kind = entry?.kind ?? .expense
-    amount = entry?.amount.wire ?? ""
+    amount = entry.map { Money.mask($0.amount.wire) } ?? ""
     date = entry?.date ?? today
     categoryId = entry?.categoryId
     note = entry?.note ?? ""
   }
   public var locked: Bool { pending != nil }
+  private var plainAmount: String { amount.replacingOccurrences(of: ",", with: "") }
   public var dirty: Bool {
-    kind != (original?.kind ?? .expense) || amount != (original?.amount.wire ?? "")
+    kind != (original?.kind ?? .expense)
+      || amount != (original.map { Money.mask($0.amount.wire) } ?? "")
       || date != (original?.date ?? today) || categoryId != original?.categoryId
       || note != (original?.note ?? "")
   }
@@ -55,8 +57,8 @@ import Observation
   public func validate() -> Bool {
     field = nil
     error = nil
-    guard amount.range(of: #"^[0-9]{1,12}(?:\.[0-9]{1,2})?$"#, options: .regularExpression) != nil,
-      let money = try? Money(string: amount), money.value > 0
+    guard plainAmount.range(of: #"^[0-9]{1,12}(?:\.[0-9]{1,2})?$"#, options: .regularExpression) != nil,
+      let money = try? Money(string: plainAmount), money.value > 0
     else {
       field = "amount"
       error =
@@ -83,7 +85,7 @@ import Observation
   public func save() async {
     guard !busy, !client.access.offline else { return }
     if pending == nil {
-      guard validate(), let money = try? Money(string: amount) else { return }
+      guard validate(), let money = try? Money(string: plainAmount) else { return }
       if original == nil && creationID == nil { creationID = UUID().uuidString }
       pending = EntryRequest(
         id: original?.id ?? creationID!, kind: kind, amount: money, date: date,
