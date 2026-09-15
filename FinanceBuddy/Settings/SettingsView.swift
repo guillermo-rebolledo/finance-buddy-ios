@@ -36,8 +36,11 @@ struct SettingsView: View {
         LabeledContent(
           "Build",
           value: Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "1")
-        Button("Finance Buddy website", systemImage: "arrow.up.right.square") {
+        Button {
           browser = BrowserDestination(url: Website.url)
+        } label: {
+          Label("Finance Buddy website", systemImage: "arrow.up.right.square")
+            .fixedSize(horizontal: false, vertical: true)
         }
         Text(
           "A private personal finance journal. Recorded activity in MXN, using Mexico City calendar dates."
