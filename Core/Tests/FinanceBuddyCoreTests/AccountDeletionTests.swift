@@ -91,6 +91,23 @@ import Testing
     #expect(api.entries.count == count)
   }
 
+  @Test(arguments: [false, true])
+  func appleAuthorizationRetry(revocationFails: Bool) async {
+    let api = FakeAPIClient()
+    api.requiresAppleAuthorization = true
+    let store = SessionStore(client: api)
+    await store.restore()
+    await store.deleteAccount()
+    #expect(store.appleAuthorizationRequired)
+    if revocationFails { api.failure = Refusal(.appleRevocationFailed, message: "Failed") }
+    await store.deleteAccount(appleAuthorizationCode: "code")
+    #expect(store.appleAuthorizationRequired == false)
+    #expect(store.state == (revocationFails ? .signedIn : .signedOut))
+    #expect((store.user != nil) == revocationFails)
+    #expect(api.entries.isEmpty == !revocationFails)
+    #expect(store.message == (revocationFails ? SessionStore.deletionFailureMessage : "Your account was deleted."))
+  }
+
   @Test func networkFailureKeepsUserAndJournal() async {
     let api = FakeAPIClient()
     let store = SessionStore(client: api)

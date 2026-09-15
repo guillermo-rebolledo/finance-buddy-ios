@@ -5,6 +5,7 @@ import SwiftUI
 struct SettingsView: View {
   @Bindable var session: SessionStore
   @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+  @State private var appleSignIn = AppleSignInFlow()
   @State private var confirmEverywhere = false
   @State private var confirmDeletion = false
   @State private var deletionConfirmed = false
@@ -23,9 +24,9 @@ struct SettingsView: View {
             await session.signOut(everywhere: false)
             GIDSignIn.sharedInstance.signOut()
           }
-        }.disabled(session.busy)
+        }.disabled(session.busy || appleSignIn.signingIn)
         Button("Sign Out Everywhere", role: .destructive) { confirmEverywhere = true }.disabled(
-          session.busy || session.client.access.offline)
+          session.busy || appleSignIn.signingIn || session.client.access.offline)
       }
       Section("About") {
         LabeledContent(
@@ -55,7 +56,7 @@ struct SettingsView: View {
       Section("Delete Account") {
         Button("Delete Account", role: .destructive) { confirmDeletion = true }
           .frame(minHeight: 44)
-          .disabled(session.busy || session.client.access.offline)
+          .disabled(session.busy || appleSignIn.signingIn || session.client.access.offline)
           .accessibilityIdentifier("deleteAccount")
         if let message = session.message {
           Text(message).fixedSize(horizontal: false, vertical: true)
@@ -83,10 +84,13 @@ struct SettingsView: View {
         deletionConfirmed = false
         Task {
           await session.deleteAccount()
+          if session.appleAuthorizationRequired {
+            await appleSignIn.authorizeDeletion(session: session)
+          }
           if session.state == .signedOut { GIDSignIn.sharedInstance.signOut() }
         }
       }) {
-        DeleteAccountView(disabled: session.busy || session.client.access.offline) {
+        DeleteAccountView(disabled: session.busy || appleSignIn.signingIn || session.client.access.offline) {
           deletionConfirmed = true
           confirmDeletion = false
         }.dynamicTypeSize(dynamicTypeSize)
