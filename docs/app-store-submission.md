@@ -1,6 +1,6 @@
 # App Store submission kit
 
-Version 1.0, current upload 15. See [release status](release-status.md) for completed account setup, uploads and remaining blockers. This kit supports [spec #7](https://github.com/guillermo-rebolledo/finance-buddy-ios/issues/7). Complete the owner-run checks in [#13](https://github.com/guillermo-rebolledo/finance-buddy-ios/issues/13) before submission. Simulator tests do not establish production readiness.
+Version 1.0, current upload 16. See [release status](release-status.md) for completed account setup, uploads and remaining blockers. This kit supports [spec #7](https://github.com/guillermo-rebolledo/finance-buddy-ios/issues/7). Complete the owner-run checks in [#13](https://github.com/guillermo-rebolledo/finance-buddy-ios/issues/13) before submission. Simulator tests do not establish production readiness.
 
 ## Listing text
 
