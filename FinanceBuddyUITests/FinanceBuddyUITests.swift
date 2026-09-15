@@ -2,6 +2,31 @@ import AppIntents
 import XCTest
 
 final class FinanceBuddyUITests: XCTestCase {
+  @MainActor func testPrivacyAndSupportBrowsers() {
+    let app = XCUIApplication()
+    let closeBrowser = app.buttons.matching(
+      NSPredicate(format: "identifier == 'Close' OR label == 'Done'")
+    ).firstMatch
+    app.launchArguments = ["-useFakeAPI"]
+    app.launch()
+    app.tabBars.buttons["Settings"].tap()
+    for identifier in ["privacyPolicy", "support"] {
+      let link = app.buttons[identifier]
+      for _ in 0..<4 where !link.isHittable { app.swipeUp() }
+      link.tap()
+      XCTAssertTrue(closeBrowser.waitForExistence(timeout: 5))
+      closeBrowser.tap()
+    }
+    for _ in 0..<4 where !app.buttons["Sign Out"].isHittable { app.swipeDown() }
+    app.buttons["Sign Out"].tap()
+    XCTAssertTrue(app.buttons["privacyPolicy"].waitForExistence(timeout: 5))
+    app.buttons["privacyPolicy"].tap()
+    XCTAssertTrue(closeBrowser.waitForExistence(timeout: 5))
+    closeBrowser.tap()
+    XCTAssertTrue(app.buttons["appleSignIn"].isEnabled)
+    XCTAssertTrue(app.buttons["Continue with Google"].isEnabled)
+  }
+
   @MainActor func testShell() {
     let app = XCUIApplication()
     app.launchArguments = ["-useFakeAPI"]

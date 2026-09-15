@@ -39,6 +39,16 @@ struct SettingsView: View {
           "A private personal finance journal. Recorded activity in MXN, using Mexico City calendar dates."
         ).font(.footnote).foregroundStyle(.secondary)
       }
+      Section("Legal & Support") {
+        Button { browser = BrowserDestination(url: Website.privacy) } label: {
+          Text("Privacy Policy").fixedSize(horizontal: false, vertical: true)
+            .frame(minHeight: 44)
+        }.accessibilityIdentifier("privacyPolicy")
+        Button { browser = BrowserDestination(url: Website.support) } label: {
+          Text("Support").fixedSize(horizontal: false, vertical: true)
+            .frame(minHeight: 44)
+        }.accessibilityIdentifier("support")
+      }
     }.navigationTitle("Settings")
       .confirmationDialog(
         "Sign out everywhere?", isPresented: $confirmEverywhere, titleVisibility: .visible

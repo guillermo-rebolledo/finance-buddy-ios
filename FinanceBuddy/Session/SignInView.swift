@@ -4,6 +4,7 @@ import SwiftUI
 
 struct SignInView: View {
   @Bindable var session: SessionStore
+  @State private var browser: BrowserDestination?
   @State private var signingIn = false
   @State private var appleSignIn = AppleSignInFlow()
   private var signInDisabled: Bool {
@@ -64,9 +65,13 @@ struct SignInView: View {
             "Use the same verified email to access your journal with either account. Hide My Email creates a separate journal."
           ).font(.footnote).foregroundStyle(
             .secondary)
+          Button { browser = BrowserDestination(url: Website.privacy) } label: {
+            Text("Privacy Policy").font(.footnote)
+              .fixedSize(horizontal: false, vertical: true).frame(minHeight: 44)
+          }.accessibilityIdentifier("privacyPolicy")
         }.multilineTextAlignment(.center).padding(32)
           .frame(maxWidth: .infinity, minHeight: geometry.size.height)
       }
-    }
+    }.sheet(item: $browser) { SafariView(url: $0.url) }
   }
 }
