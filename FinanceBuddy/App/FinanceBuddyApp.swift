@@ -10,7 +10,9 @@ import SwiftUI
     let client: any APIClient
     #if DEBUG
       if ProcessInfo.processInfo.arguments.contains("-useFakeAPI") {
-        client = FakeAPIClient()
+        let fake = FakeAPIClient()
+        fake.access.offline = ProcessInfo.processInfo.arguments.contains("-offline")
+        client = fake
       } else {
         client = Self.liveClient()
       }

@@ -7,6 +7,7 @@ import Observation
   func session() async throws -> SessionReply?
   func signIn(provider: SignInProvider, idToken: String, nonce: String) async throws
   func signOut(everywhere: Bool) async throws
+  func deleteAccount(appleAuthorizationCode: String?) async throws
   func clearToken() throws
   func summary(_ period: PeriodSelection) async throws -> Summary
   func trends(_ period: PeriodSelection) async throws -> Trends

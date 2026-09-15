@@ -8,7 +8,7 @@ Open `FinanceBuddy.xcodeproj`, select the **FinanceBuddy** scheme and an iPhone 
 
 Debug uses `http://localhost:3000` on simulators; start the backend in its own checkout with `pnpm dev:local`. On physical devices, Debug uses `https://financebuddy.tech`. Release uses the production HTTPS origin on both destinations. Only the Debug Info.plist grants an ATS exception, scoped to localhost.
 
-Copy `Config/Local.xcconfig.example` to `Config/Local.xcconfig` and fill in the **public** iOS client ID, web/server client ID, and reversed iOS client ID. Local.xcconfig is ignored. The bundle ID registered with the Google iOS OAuth client must be **com.guillermorebolledo.FinanceBuddy**. Set the same iOS client ID as `GOOGLE_IOS_CLIENT_ID` in the backend's private configuration. No Google client secret belongs in this app.
+The public Google iOS, web/server, and reversed client IDs are committed in both xcconfigs. No local file is needed to archive. Optionally copy `Config/Local.xcconfig.example` to the ignored `Config/Local.xcconfig` for development overrides. The registered bundle ID is **com.guillermorebolledo.FinanceBuddy**; the backend must use the same `GOOGLE_IOS_CLIENT_ID`. No Google or Apple client secret belongs in the app.
 
 The SDK's nonce overload was checked in its installed public header and compiled as:
 
@@ -23,7 +23,7 @@ try await GIDSignIn.sharedInstance.signIn(
 
 `GIDConfiguration` supplies `serverClientID` using the web client ID. The app sends the Google ID token with the same fresh nonce to the backend. Only `set-auth-token` is saved to Keychain; the response body's unsigned token is never used. Run a normally signed simulator build: disabling code signing can prevent Keychain access.
 
-For a physical development device, select your Apple development team in Xcode. Debug connects to production by default because localhost on a phone is the phone itself. To use a development backend, set `API_BASE_URL[sdk=iphoneos*]` to a reachable HTTPS origin in `Config/Local.xcconfig`; see the example file for xcconfig URL syntax. Rebuild and run after changing the origin. App Store distribution is outside this project’s scope.
+For a physical development device, the signing team is recorded in `project.yml`. Debug connects to production by default because localhost on a phone is the phone itself. To use a development backend, set `API_BASE_URL[sdk=iphoneos*]` to a reachable HTTPS origin in `Config/Local.xcconfig`; see the example file for xcconfig URL syntax. Rebuild and run after changing the origin. App Store preparation and owner setup are covered in the [submission kit](docs/app-store-submission.md).
 
 ## Sign in with Apple
 
@@ -75,3 +75,7 @@ See [verification](docs/verification.md) for results and remaining owner/device 
 ## Project notes
 
 The Google logo is an unmodified asset from GoogleSignIn-iOS 10.0.0; its Apache license is included in `docs/GoogleSignIn-LICENSE`. `scripts/generate-icon.swift` produces the app icon with Apple’s SF Symbols. There are no analytics, local financial persistence, background queues, or in-app Google Drive authorization.
+
+## Upload build numbers
+
+Raise `CURRENT_PROJECT_VERSION` in `project.yml` for every App Store Connect upload, then regenerate with `xcodegen generate`. Keep `MARKETING_VERSION` at 1.0 for the first submission. Production `MINIMUM_IOS_BUILD` must never exceed a build in review or on TestFlight. The signing team and iPhone-only target are recorded in `project.yml`.

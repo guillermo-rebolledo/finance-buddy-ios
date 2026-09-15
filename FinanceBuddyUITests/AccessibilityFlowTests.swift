@@ -5,7 +5,7 @@ final class AccessibilityFlowTests: XCTestCase {
     let app = XCUIApplication()
     for screen in [
       "editor", "categoryEditor", "budgetEditor", "budgets", "deletion", "export", "unavailable",
-      "upgrade", "signIn",
+      "upgrade", "signIn", "settings",
     ] {
       app.launchArguments = ["-useFakeAPI", "-largestType", "-dark", "-previewScreen", screen]
       app.launch()
@@ -55,7 +55,16 @@ final class AccessibilityFlowTests: XCTestCase {
     try audit(app, "Settings top")
     app.swipeUp()
     try audit(app, "Settings bottom")
-    app.swipeDown()
+    let delete = app.buttons["deleteAccount"]
+    for _ in 0..<5 where !delete.isHittable { app.swipeUp() }
+    try audit(app, "Delete Account section")
+    delete.tap()
+    XCTAssertTrue(app.navigationBars["Delete Account"].waitForExistence(timeout: 5))
+    try audit(app, "Account deletion confirmation top")
+    for _ in 0..<12 where !app.buttons["Keep Account"].isHittable { app.swipeUp() }
+    try audit(app, "Account deletion confirmation bottom")
+    app.buttons["Keep Account"].tap()
+    for _ in 0..<4 where !app.buttons["Sign Out"].isHittable { app.swipeDown() }
     app.buttons["Sign Out"].tap()
     XCTAssertTrue(app.buttons["Continue with Google"].waitForExistence(timeout: 5))
     XCTAssertTrue(app.buttons["appleSignIn"].exists)

@@ -1,8 +1,8 @@
 // Physical devices need a reachable server; localhost is the phone itself.
 API_BASE_URL = https:/$()/financebuddy.tech
 API_BASE_URL[sdk=iphonesimulator*] = http:/$()/localhost:3000
-GOOGLE_IOS_CLIENT_ID = configure-ios-client.apps.googleusercontent.com
-GOOGLE_SERVER_CLIENT_ID = configure-web-client.apps.googleusercontent.com
-GOOGLE_REVERSED_CLIENT_ID = com.googleusercontent.apps.configure-ios-client
+GOOGLE_IOS_CLIENT_ID = 443304532669-b3em3m7g869v21jfcegrdeej3d4joudv.apps.googleusercontent.com
+GOOGLE_SERVER_CLIENT_ID = 443304532669-8c5br39b19nqtsfg3h5gdrrv61e7dpfc.apps.googleusercontent.com
+GOOGLE_REVERSED_CLIENT_ID = com.googleusercontent.apps.443304532669-b3em3m7g869v21jfcegrdeej3d4joudv
 #include? "Local.xcconfig"
 INFOPLIST_FILE = Config/Info-Debug.plist

@@ -54,8 +54,43 @@ The broad exploratory contrast/font audit reported system-control findings on bo
 
 ## Remaining before completion
 
-- Complete the backend's `docs/verification.md` iPhone checklist against a deployment, including physical-device behavior, verified-account sign-in and separate-account isolation, session revocation, exports, and refusal recovery.
-- Complete live PDF/Sheets checks. The owner has confirmed entry/category mutation and figure parity separately; simulator fixture tests do not establish export behavior.
-- Physical VoiceOver navigation and audible Audio Graph playback remain pending at the owner's request. Simulator audits and descriptor tests are not a substitute for listening to and navigating the app on a device.
+All remaining deployment, live PDF/Sheets, physical VoiceOver and audible Audio Graph checks are consolidated in the [TestFlight production checklist](app-store-submission.md#testflight-production-checklist). The backend's verification checklist remains authoritative for the deployment. Prior owner confirmations above do not establish that a new TestFlight build has passed.
 
-The backend source and web app are unchanged. Its verification checklist remains the authoritative deployment checklist.
+## App Store readiness (#7)
+
+### Automated verification
+
+Recorded September 14, 2026 for version 1.0, build 12, with Xcode 26.6 and the iPhone 17e / iOS 26.5 simulator. This is local verification, not a TestFlight result.
+
+- Release builds without `Config/Local.xcconfig`. The built app is iPhone only, contains the public Google identifiers and URL scheme, declares no non-exempt encryption, and includes the app privacy manifest. Project regeneration preserves the signing team and device family. The Release build after integrating the latest main has no compiler or orientation warnings.
+- The Release assertion passes on the built bundle. Mutating device family, either Google client ID, reversed client ID, encryption declaration or manifest presence makes it fail with the corresponding setting named. Manifest data types, purposes, linkage and tracking match the submission kit.
+- All 61 Swift Testing core tests and nine view/integration tests pass on iOS 26.5; core tests also pass on macOS. Tests cover deletion requests, token removal/retention, refusals, transport failure, the busy guard, journal reset, Apple code forwarding, no requested scopes, cancellation and failed authorization/revocation.
+- All 14 UI/accessibility tests pass across the full run and focused reruns. The full run passed 13; the browser test was corrected for Safari’s iOS 26 “Close” label (with “Done” support for earlier versions) and passed on rerun. After screenshot inspection, the largest-text override was passed explicitly into the deletion sheet; both light and AX5 accessibility flows passed again, and the AX5 screenshots confirm readable wrapping and reachable buttons after scrolling. The final Release build also passes without warnings.
+- Public `/privacy` and `/support` returned HTTP 200 without authentication on September 14, 2026. This does not prove provider revocation or production deletion works on a device.
+
+### Production verification and submission — pending (#13)
+
+Follow the [submission kit](app-store-submission.md#testflight-production-checklist). Issue #13 remains open until the owner completes its physical-device and account-side steps. No build was uploaded or submitted during this implementation, no real account was deleted, and no demo credentials were created or committed.
+
+| Field | Result |
+| --- | --- |
+| TestFlight test date / tester | Pending |
+| Uploaded version / build | Pending (local source is 1.0 / 12; increment before upload) |
+| Physical iPhone / iOS version | Pending |
+| Production deployment / minimum iOS build | Pending |
+| Backend deletion #60 deployment and live revocation | Pending |
+| Google / Apple Share My Email / Hide My Email | Pending |
+| Session restore / Sign Out / Sign Out Everywhere | Pending |
+| Financial movements / categories / budgets / web parity | Pending |
+| PDF / Sheets / refusal recovery | Pending |
+| Google-only / Apple-linked / shared-journal deletion | Pending |
+| Fresh journal / starter categories / unrelated-account isolation | Pending |
+| Web deletion invalidates iPhone / old exports retained | Pending |
+| Privacy / Support links on physical device | Pending |
+| VoiceOver / Audio Graph / largest text | Pending |
+| Demo login and populated review journal | Pending |
+| App Store Connect metadata / screenshots / privacy / age rating | Pending |
+| Pricing / availability / EU trader status | Pending |
+| Submission date / review build / review outcome | Not submitted |
+
+For each completed checklist item record pass/fail, date, build and evidence here. Put credentials only in App Store Connect. Track rejection feedback as new issues rather than marking untested behavior passed.

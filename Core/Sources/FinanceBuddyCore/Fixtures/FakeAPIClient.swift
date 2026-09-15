@@ -16,17 +16,45 @@ import Foundation
   public var budgets = Fixtures.budgets
   public var budgetRequests: [(PeriodSelection, BudgetRequest)] = []
   public var removalRequests: [(PeriodSelection, BudgetRemovalScope)] = []
+  public var requiresAppleAuthorization = false
+  public var accountDeletionRequests: [String?] = []
+  private var accountDeleted = false
   public init() {}
   public func session() async throws -> SessionReply? {
     if let failure { throw failure }
     return signedIn ? Fixtures.session : nil
   }
   public func signIn(provider: SignInProvider, idToken: String, nonce: String) async throws {
+    if accountDeleted {
+      managedCategories = CategoryLists(
+        income: ["Salary", "Freelance", "Other income"].map {
+          Category(id: UUID().uuidString, kind: .income, name: $0)
+        },
+        expense: ["Groceries", "Dining", "Transport", "Housing", "Utilities", "Health", "Shopping", "Entertainment"].map {
+          Category(id: UUID().uuidString, kind: .expense, name: $0)
+        })
+      accountDeleted = false
+    }
     signedIn = true
     access.signedOut = false
   }
   public func signOut(everywhere: Bool) async throws {
     if let transportError { throw transportError }
+    try clearToken()
+  }
+  public func deleteAccount(appleAuthorizationCode: String?) async throws {
+    accountDeletionRequests.append(appleAuthorizationCode)
+    if access.offline { throw ClientError.offline }
+    if let transportError { throw transportError }
+    if let failure { throw failure }
+    if requiresAppleAuthorization && appleAuthorizationCode?.isEmpty != false {
+      throw Refusal(.appleAuthorizationRequired, message: "Confirm with Apple.")
+    }
+    entries.removeAll()
+    managedCategories = CategoryLists(income: [], expense: [])
+    budgets.removeAll()
+    exportRequests.removeAll()
+    accountDeleted = true
     try clearToken()
   }
   public func clearToken() throws {

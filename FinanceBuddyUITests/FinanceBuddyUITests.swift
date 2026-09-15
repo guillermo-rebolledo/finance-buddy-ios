@@ -2,6 +2,59 @@ import AppIntents
 import XCTest
 
 final class FinanceBuddyUITests: XCTestCase {
+  @MainActor func testAccountDeletionAndCancellation() {
+    let app = XCUIApplication()
+    app.launchArguments = ["-useFakeAPI"]
+    app.launch()
+    app.tabBars.buttons["Settings"].tap()
+    let delete = app.buttons["deleteAccount"]
+    for _ in 0..<5 where !delete.isHittable { app.swipeUp() }
+    delete.tap()
+    XCTAssertTrue(app.buttons["Keep Account"].waitForExistence(timeout: 5))
+    app.buttons["Keep Account"].tap()
+    XCTAssertTrue(app.tabBars.buttons["Settings"].exists)
+    delete.tap()
+    app.buttons["Delete Permanently"].tap()
+    XCTAssertTrue(app.staticTexts["Your account was deleted."].waitForExistence(timeout: 5))
+    XCTAssertTrue(app.buttons["Continue with Google"].exists)
+  }
+
+  @MainActor func testAccountDeletionDisabledOffline() {
+    let app = XCUIApplication()
+    app.launchArguments = ["-useFakeAPI", "-offline"]
+    app.launch()
+    app.tabBars.buttons["Settings"].tap()
+    let delete = app.buttons["deleteAccount"]
+    for _ in 0..<5 where !delete.isHittable { app.swipeUp() }
+    XCTAssertTrue(delete.exists)
+    XCTAssertFalse(delete.isEnabled)
+  }
+
+  @MainActor func testPrivacyAndSupportBrowsers() {
+    let app = XCUIApplication()
+    let closeBrowser = app.buttons.matching(
+      NSPredicate(format: "identifier == 'Close' OR label == 'Done'")
+    ).firstMatch
+    app.launchArguments = ["-useFakeAPI"]
+    app.launch()
+    app.tabBars.buttons["Settings"].tap()
+    for identifier in ["privacyPolicy", "support"] {
+      let link = app.buttons[identifier]
+      for _ in 0..<4 where !link.isHittable { app.swipeUp() }
+      link.tap()
+      XCTAssertTrue(closeBrowser.waitForExistence(timeout: 5))
+      closeBrowser.tap()
+    }
+    for _ in 0..<4 where !app.buttons["Sign Out"].isHittable { app.swipeDown() }
+    app.buttons["Sign Out"].tap()
+    XCTAssertTrue(app.buttons["privacyPolicy"].waitForExistence(timeout: 5))
+    app.buttons["privacyPolicy"].tap()
+    XCTAssertTrue(closeBrowser.waitForExistence(timeout: 5))
+    closeBrowser.tap()
+    XCTAssertTrue(app.buttons["appleSignIn"].isEnabled)
+    XCTAssertTrue(app.buttons["Continue with Google"].isEnabled)
+  }
+
   @MainActor func testShell() {
     let app = XCUIApplication()
     app.launchArguments = ["-useFakeAPI"]

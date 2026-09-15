@@ -13,6 +13,8 @@ public enum RefusalCode: String, Codable, CaseIterable, Sendable {
   case unavailable
   case notConfirmed = "not_confirmed"
   case periodEnded = "period_ended"
+  case appleAuthorizationRequired = "apple_authorization_required"
+  case appleRevocationFailed = "apple_revocation_failed"
   case unknown
   public init(from decoder: any Decoder) throws {
     self = Self(rawValue: try decoder.singleValueContainer().decode(String.self)) ?? .unknown
