@@ -19,3 +19,5 @@ Apple obtains the icon from the uploaded app build; it is not a separate listing
 On September 15, 2026, build 1.0 (15) is waiting for Beta App Review. To deliver this icon, merge the PR, archive with an unused higher build number, upload, wait for processing, and select that new build on the draft App Store version. Add it to the appropriate TestFlight group and test it on a physical iPhone before public submission. If version 1.0 has already been published by then, create a new marketing version as well.
 
 Existing archives and uploaded builds retain their original icon. Screenshots of the app's internal screens do not need replacement for an icon-only update.
+
+Build **1.0 (16)** was uploaded from merged main on September 15, 2026 and selected on the draft App Store version. The Included Assets preview in App Store Connect shows this wallet icon. External Beta App Review is temporarily blocked while build 15 is already in review; see [release status](../release-status.md).
