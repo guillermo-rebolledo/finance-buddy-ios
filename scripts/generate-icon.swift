@@ -1,12 +1,31 @@
-import AppKit
-let size = NSSize(width: 1024, height: 1024)
-let bitmap = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: 1024, pixelsHigh: 1024, bitsPerSample: 8, samplesPerPixel: 3, hasAlpha: false, isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0)!
-NSGraphicsContext.saveGraphicsState()
-NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: bitmap)
-NSColor(srgbRed: 0.08, green: 0.36, blue: 0.31, alpha: 1).setFill()
-NSBezierPath(rect: NSRect(origin: .zero, size: size)).fill()
-let book = NSImage(systemSymbolName: "book.closed.fill", accessibilityDescription: nil)!
-let config = NSImage.SymbolConfiguration(pointSize: 580, weight: .regular).applying(NSImage.SymbolConfiguration(paletteColors: [.white]))
-book.withSymbolConfiguration(config)!.draw(in: NSRect(x: 232, y: 222, width: 560, height: 600))
-NSGraphicsContext.restoreGraphicsState()
-try bitmap.representation(using: .png, properties: [:])!.write(to: URL(fileURLWithPath: "FinanceBuddy/Assets.xcassets/AppIcon.appiconset/AppIcon.png"))
+import Foundation
+import CoreGraphics
+import ImageIO
+import UniformTypeIdentifiers
+
+// Run from the repository root: swift scripts/generate-icon.swift
+// Keep the supplied artwork intact; Xcode generates device sizes and iOS masks corners.
+let sourceURL = URL(fileURLWithPath: "docs/branding/app-icon-source.webp")
+let outputURL = URL(fileURLWithPath: "FinanceBuddy/Assets.xcassets/AppIcon.appiconset/AppIcon.png")
+guard let source = CGImageSourceCreateWithURL(sourceURL as CFURL, nil),
+      let image = CGImageSourceCreateImageAtIndex(source, 0, nil),
+      image.width == image.height else {
+    fatalError("App icon source must be a readable square image: \(sourceURL.path)")
+}
+
+let size = 1024
+let colorSpace = CGColorSpace(name: CGColorSpace.sRGB)!
+let context = CGContext(data: nil, width: size, height: size, bitsPerComponent: 8,
+                        bytesPerRow: 0, space: colorSpace,
+                        bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue)!
+context.interpolationQuality = .high
+context.draw(image, in: CGRect(x: 0, y: 0, width: size, height: size))
+guard let icon = context.makeImage(),
+      let destination = CGImageDestinationCreateWithURL(outputURL as CFURL, UTType.png.identifier as CFString, 1, nil) else {
+    fatalError("Could not create app icon PNG")
+}
+CGImageDestinationAddImage(destination, icon, nil)
+guard CGImageDestinationFinalize(destination) else {
+    fatalError("Could not save app icon PNG")
+}
+print("Generated opaque 1024 × 1024 sRGB icon at \(outputURL.path)")

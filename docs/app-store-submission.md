@@ -1,13 +1,13 @@
 # App Store submission kit
 
-Version 1.0. This kit supports [spec #7](https://github.com/guillermo-rebolledo/finance-buddy-ios/issues/7). Complete the owner-run checks in [#13](https://github.com/guillermo-rebolledo/finance-buddy-ios/issues/13) before submission. Simulator tests do not establish production readiness.
+Version 1.0, current upload 15. See [release status](release-status.md) for completed account setup, uploads and remaining blockers. This kit supports [spec #7](https://github.com/guillermo-rebolledo/finance-buddy-ios/issues/7). Complete the owner-run checks in [#13](https://github.com/guillermo-rebolledo/finance-buddy-ios/issues/13) before submission. Simulator tests do not establish production readiness.
 
 ## Listing text
 
 | Field | Copy |
 | --- | --- |
-| Name | Finance Buddy |
-| Name fallback | Finance Buddy: Journal |
+| Name | Finance Buddy: Journal |
+| Original name (unavailable) | Finance Buddy |
 | Subtitle | A clear journal for your money |
 | Keywords | expenses,income,budget,journal,MXN,pesos,spending,refunds,finance,summary |
 | Promotional text | Record your financial movements, follow trends and plan budgets in Mexican pesos. Keep a clear journal on your iPhone and export snapshots when you need them. |
@@ -16,7 +16,7 @@ Version 1.0. This kit supports [spec #7](https://github.com/guillermo-rebolledo/
 | Support URL | https://financebuddy.tech/support |
 | Privacy Policy URL | https://financebuddy.tech/privacy |
 
-Confirm name availability in App Store Connect; it has not been reserved by this document. The subtitle must fit 30 characters, keywords 100, and promotional text 170.
+Finance Buddy: Journal was reserved on September 15, 2026 (Apple ID 6812466832). Finance Buddy was unavailable. The subtitle must fit 30 characters, keywords 100, and promotional text 170.
 
 ### Description
 
@@ -38,16 +38,27 @@ Finance Buddy is free, with no ads, tracking, subscriptions or in-app purchases.
 
 ## Privacy label
 
-Answer **Yes, we collect data**. For each row below select **App Functionality**, **linked to the user's identity: Yes**, and **used for tracking: No**. No other purposes or collected data types are declared by the app-level manifest.
+The September 15 reconciliation covers the app, backend and every archived SDK. Use these exact purposes. All rows are **linked to identity: Yes**, **used for tracking: No**.
 
-| App Store Connect type | Manifest data type | What it covers |
+| App Store Connect type | Purposes | Evidence |
 | --- | --- | --- |
-| Contact Info → Name | NSPrivacyCollectedDataTypeName | Sign-in profile name |
-| Contact Info → Email Address | NSPrivacyCollectedDataTypeEmailAddress | Verified sign-in email, including Apple relay email |
-| Identifiers → User ID | NSPrivacyCollectedDataTypeUserID | Account identity |
-| Financial Info → Other Financial Info | NSPrivacyCollectedDataTypeOtherFinancialInfo | Financial movements, categories, budgets and export records |
+| Contact Info → Name | App Functionality | Provider profile and Google manifest |
+| Contact Info → Email Address | App Functionality | Provider identity and Google manifest |
+| Contact Info → Phone Number | App Functionality | Google manifest |
+| Location → Coarse Location | App Functionality | Google's IP-based fraud prevention and manifest |
+| Identifiers → User ID | App Functionality, Analytics | Journal ownership; Google manifest |
+| Identifiers → Device ID | Analytics | Google manifest |
+| Usage Data → Other Usage Data | Analytics | Google manifest |
+| Other Data Types | App Functionality, Analytics | Stored session IP/user agent and provider grants; Google manifest |
+| Financial Info → Other Financial Info | App Functionality | Financial movements and budgets |
+| User Content → Photos or Videos | App Functionality | Better Auth retains the Google profile-picture reference |
+| User Content → Other User Content | App Functionality | Free-form journal notes and custom category names |
+| Diagnostics → Other Diagnostic Data | App Functionality | Hosting request/error diagnostics |
 
-[PrivacyInfo.xcprivacy](../FinanceBuddy/PrivacyInfo.xcprivacy) sets tracking to false, tracking domains to an empty list, and required-reason API use to an empty list. Google SDKs bundle their own manifests. Reassess if new SDKs, analytics, UserDefaults or file timestamp access are introduced. Compare the final app privacy report and the public policy before entering the label; all must describe the same collection.
+Google's 10.0.0 manifest is the version-specific vendor disclosure used for its SDK; the integration has no documented override excluding these categories. This is not a claim that every person supplies every optional profile field. Finance Buddy itself does not ask for phone numbers or location permission. No vendor manifest was altered. See [reconciliation evidence](privacy-release-gap.md).
+
+The live policy now distinguishes third-party SDK analytics from Finance Buddy's own processing, and describes profile images, notes, session details, logs, backups and deletion. Build 15 adds the missing app-owned manifest declarations; it changes no runtime behavior from build 14. All 11 archived manifests are retained and aggregate to the 12 rows above. Evidence: `artifacts/release-1.0-15/privacy-manifests.json` and `privacy-summary.json`. Required-reason SDK declarations remain unchanged (UserDefaults CA92.1, C56D.1 and 1C8F.1).
+
 
 ## Age rating answers
 
@@ -90,15 +101,15 @@ Before review, test the demo login on a separate device. Keep it usable througho
 
 ## Screenshot plan
 
-Capture six portrait PNG screenshots at **1320 × 2868** using an **iPhone 16 Pro Max simulator**. This is an accepted 6.9-inch size in [Apple's screenshot specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications). Use the Debug build with the in-memory fake; fixture arguments are disabled in Release. Do not show personal production data.
+Capture six portrait screenshots (PNG originals; opaque JPEGs for upload) at **1320 × 2868** using an **iPhone 17 Pro Max simulator**. This is an accepted 6.9-inch size in [Apple's screenshot specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications). Use the Debug build with the in-memory fake; fixture arguments are disabled in Release. Do not show personal production data.
 
 | Order | Screen | Appearance | Launch arguments / action |
 | --- | --- | --- | --- |
-| 1 | Dashboard summary and trends | Light | `-useFakeAPI -light`; tap Dashboard in the fake-backed app |
+| 1 | Dashboard summary and budget | Light | `-useFakeAPI -light`; tap Dashboard in the fake-backed app |
 | 2 | Financial movements | Light | `-useFakeAPI -light`; opens Entries in the fake-backed app |
-| 3 | Entry editor | Light | `-useFakeAPI -light -previewScreen editor` |
-| 4 | Budgets | Light | `-useFakeAPI -light -previewScreen budgets` |
-| 5 | Categories | Dark | `-useFakeAPI -dark -previewScreen categories` |
+| 3 | Entry editor | Light | `-useFakeAPI -light`; open the Weekly groceries entry |
+| 4 | Budgets | Light | `-useFakeAPI -light`; tap Budgets |
+| 5 | Categories | Light | `-useFakeAPI -light`; tap Categories |
 | 6 | Export options | Light | `-useFakeAPI -light`; tap Dashboard, then Export |
 
 The `export` preview route intentionally shows a reconnect refusal; use the normal fake-backed Dashboard for the listing's export-options image. The `dashboard`, `entries`, `settings` and `signIn` preview routes also exist for visual checks. Test `-largestType` separately for accessibility; use the standard system type size for listing captures. Capture via Simulator → File → Save Screen, verify the PNG's pixel size, and upload in this order. Capture actual app screens; avoid invented balances or export success claims.
@@ -109,7 +120,7 @@ The `export` preview route intentionally shows a reconnect refusal; use the norm
 2. Confirm Sign in with Apple is enabled on that App ID and it is associated with the website Services ID. Confirm provisioning for team `X76BWPRADX`.
 3. Follow the backend's [Apple setup guide](https://github.com/guillermo-rebolledo/finance-buddy/blob/main/docs/apple-sign-in.md#generate-and-renew-the-bundle-id-secret): generate a separate JWT with the bundle ID as subject, deploy it as `APPLE_IOS_CLIENT_SECRET` alongside `APPLE_IOS_BUNDLE_ID`, and keep the web Services ID secret separate. Schedule renewal of both secrets before their 180-day expiration. Private keys and secrets stay outside this repo.
 4. Confirm backend #60 and #61 are deployed, not merely merged. Check the minimum-build setting before every upload and while review is in progress.
-5. Create a dedicated demo Google account, with 2-step verification off as required by this review plan. Populate several weeks of financial movements, custom categories, a repeating budget and trends; connect Sheets on the website. Put credentials only in App Store Connect.
+5. Create a dedicated demo Google account, that App Review can access without a personal-device verification challenge. Populate several weeks of financial movements, custom categories, a repeating budget and trends; connect Sheets on the website. Put credentials only in App Store Connect.
 6. Set price to **Free** and initially make the app available in **Mexico**. Complete the EU trader-status declaration with the owner's actual status before expanding availability. Disable Designed for iPhone distribution on Mac and Apple Vision Pro for this iPhone-only release.
 7. Enter listing copy, privacy label, age rating, support/privacy URLs and review notes. Upload the screenshots. Use the standard Apple EULA unless the owner provides another.
 8. Raise `CURRENT_PROJECT_VERSION` for each upload, regenerate the project, and run `scripts/verify.sh`. Archive Release for a physical-device destination, validate and upload from Xcode Organizer. Keep marketing version 1.0 for the first submission. Confirm export compliance is resolved by the built encryption declaration.

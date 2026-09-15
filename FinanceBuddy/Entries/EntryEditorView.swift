@@ -36,24 +36,28 @@ struct EntryEditorView: View {
           )
         }
         Section {
-          HStack(alignment: .firstTextBaseline) {
+          amountLayout {
             Text("MXN").foregroundStyle(.secondary)
-            // Cents-first: the field holds only digits and the overlay shows them masked, so
+            // Cents-first: the field holds only digits and the visible text shows them masked, so
             // SwiftUI never rewrites the text under the caret while typing.
-            TextField(
-              "Amount",
-              text: Binding(
-                get: { String(store.amount.filter(\.isNumber).drop { $0 == "0" }) },
-                set: { store.amount = Money.mask($0) }),
-              prompt: Text("")
-            )
-            .keyboardType(.numberPad).foregroundStyle(.clear).tint(.clear)
-            .overlay(alignment: .leading) {
+            ZStack(alignment: .leading) {
               Text(store.amount.isEmpty ? "0.00" : store.amount)
                 .foregroundStyle(store.amount.isEmpty ? .tertiary : .primary)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .accessibilityHidden(true)
+              TextField(
+                "Amount",
+                text: Binding(
+                  get: { String(store.amount.filter(\.isNumber).drop { $0 == "0" }) },
+                  set: { store.amount = Money.mask($0) }),
+                prompt: Text("")
+              )
+              .keyboardType(.numberPad).foregroundStyle(.clear).tint(.clear)
+              .accessibilityLabel("Amount in Mexican pesos")
+              .accessibilityValue(store.amount.isEmpty ? "0.00" : store.amount)
+              .focused($focused, equals: "amount").accessibilityIdentifier("entryAmount")
             }
-            .accessibilityValue(store.amount.isEmpty ? "0.00" : store.amount)
-            .focused($focused, equals: "amount").accessibilityIdentifier("entryAmount")
           }
 
         } header: {
@@ -158,5 +162,10 @@ struct EntryEditorView: View {
     Picker("Type", selection: $store.kind) {
       ForEach(MovementKind.allCases, id: \.self) { Text($0.title).tag($0) }
     }.focused($focused, equals: "kind")
+  }
+  private var amountLayout: AnyLayout {
+    typeSize.isAccessibilitySize
+      ? AnyLayout(VStackLayout(alignment: .leading))
+      : AnyLayout(HStackLayout(alignment: .firstTextBaseline))
   }
 }
