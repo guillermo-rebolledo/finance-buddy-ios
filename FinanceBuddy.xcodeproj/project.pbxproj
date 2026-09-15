@@ -36,6 +36,7 @@
 		76A289BF45AAF1058D685561 /* ConnectivityMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7851F3ABD3939026D99F9E73 /* ConnectivityMonitor.swift */; };
 		7828760BF7483239DEE8838E /* ToastMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC2367D75BA1E44F4486DFD4 /* ToastMessage.swift */; };
 		793D60CD921916C25BDDC2A5 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87D65FD21A4A3B5B4214952 /* SettingsView.swift */; };
+		7A4B3D6FA7F06A59B2039582 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = D51FE4531EDB64F372DF8F36 /* PrivacyInfo.xcprivacy */; };
 		7F9BBD7705AEF797D1D4215D /* FinanceChartDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A605510F0BD236B82F2C16 /* FinanceChartDescriptor.swift */; };
 		8A64CD0F83E6E58560B480C8 /* AccessibilityFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A470C9E7AD2C4A19C7D072 /* AccessibilityFlowTests.swift */; };
 		8B959D19559D63F34F4046F4 /* ValueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A278F4ACB958D5E29F4A311 /* ValueTests.swift */; };
@@ -120,6 +121,7 @@
 		C1C46A409A08720E3120244A /* FinanceBuddyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceBuddyUITests.swift; sourceTree = "<group>"; };
 		C6927015A37D1569FE7B24EB /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		D13C2A66FE7D69204B3B4902 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		D51FE4531EDB64F372DF8F36 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		E29B4DE3E0EC33A7081A228E /* ChartDatum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartDatum.swift; sourceTree = "<group>"; };
 		E48D872C916A48944B73BD1E /* CategoryEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryEditorView.swift; sourceTree = "<group>"; };
 		E509608EEEDDE9DE3072E255 /* FinanceBuddy.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = FinanceBuddy.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -252,6 +254,7 @@
 			children = (
 				20D812C1E5C6FA96B9620C36 /* Assets.xcassets */,
 				9E457E08ABA483A9A515C50F /* FinanceBuddy.entitlements */,
+				D51FE4531EDB64F372DF8F36 /* PrivacyInfo.xcprivacy */,
 				7F5627D3D7C6EA46BC76D420 /* App */,
 				1F9AD788F490DC52739D6182 /* Budgets */,
 				F53FE9EE16DE502019ACECF0 /* Categories */,
@@ -455,6 +458,7 @@
 						TestTargetID = 42BF384680035FADE5528E3A;
 					};
 					42BF384680035FADE5528E3A = {
+						DevelopmentTeam = X76BWPRADX;
 						ProvisioningStyle = Automatic;
 					};
 					6EB6BB8CADC0CEDD4CBD5AEB = {
@@ -497,6 +501,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				014D34AB1B2ADD4AF0534380 /* Assets.xcassets in Resources */,
+				7A4B3D6FA7F06A59B2039582 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -753,13 +758,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FinanceBuddy/FinanceBuddy.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = X76BWPRADX;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.guillermorebolledo.FinanceBuddy;
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -770,13 +776,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = FinanceBuddy/FinanceBuddy.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = X76BWPRADX;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.guillermorebolledo.FinanceBuddy;
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

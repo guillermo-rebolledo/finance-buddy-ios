@@ -44,6 +44,8 @@ targets:
         product: GoogleSignInSwift
     settings:
       base:
+        TARGETED_DEVICE_FAMILY: '1'
+        DEVELOPMENT_TEAM: X76BWPRADX
         PRODUCT_BUNDLE_IDENTIFIER: com.guillermorebolledo.FinanceBuddy
   FinanceBuddyCoreTests:
     type: bundle.unit-test
