@@ -1,5 +1,36 @@
 # Verification
 
+## Release-gap follow-up — September 15, 2026
+
+- Published the 12-type App Privacy label after reconciling app, backend and GoogleSignIn 10.0.0 declarations. App Store Connect confirmed “Published … by Guillermo Ortiz Rebolledo.” Added app-owned declarations for profile images, journal free text, stored session details and operational diagnostics.
+- Version **1.0 (15)** changes only the privacy manifest and build number from 14. Release archive, build/version/configuration checks and signature verification passed; no archive warnings. Upload succeeded and processing completed. Selected 15 on the draft App Store version and added it to internal group **Release Testing**, with automatic distribution disabled. Existing 14 UI results remain the code-behavior evidence; a physical-device result for 15 is still pending.
+- Corrected the public backend policy, including the distinction between Google SDK analytics and own processing, session data, logs/backups and actual provider revocation behavior. TypeScript and page ESLint passed; Vercel production build passed; public privacy/support return 200 and the corrected SDK section is present.
+- Original deployment `fe1c0df` includes backend #60/#61. New policy commit `2d1e53b` is deployed as `dpl_CNJ4Zr8VQuhAGbcxaHhw3rRYoizi`, with source preserved in backend PR #67. Production has no configured minimum iOS build. An unauthenticated build-15 session request returns 200/null.
+- Generated and configured the separate native Apple secret as Sensitive Production data, verified its signature/claims locally, and redeployed. Expiry: March 14, 2027, 18:57:24 UTC. No private key or JWT was printed or committed. Actual native authorization-code exchange/revocation is still an owner phone check.
+- Saved content-rights answer, reviewer contact and review instructions. Free Apps Agreement and DSA status are Active; paid-app tax/banking notices were left unchanged. Review credentials are now saved in both App Store Connect forms; physical-phone test results remain outstanding.
+- Submitted **1.0 (15)** to **Beta App Review** for Mexico Launch Testers on September 15, 2026. Confirmed **Waiting for Review**, one build and one tester (`gortiz.dev@gmail.com`). Automatic tester notification is enabled; the tester still shows **No Builds Available** while awaiting approval. No invitation was sent to the different Account Holder address.
+- Verified the spare review account in a fresh private browser session using its password, without Touch ID, SMS or another verification prompt. Six fictional transactions, a repeating monthly MXN 16,000 budget and Learning category are saved. Sheets is connected with owner approval. September PDF and Sheets exports match the six entries and totals: income MXN 25,800.00, expenses after refunds MXN 8,535.25, net MXN 17,264.75. This is browser evidence, not a physical iPhone result.
+
+- Google OAuth was still Testing with one allowed user. Saved public branding links, declared the existing identity and drive.file scopes (all non-sensitive), and switched to In production. Google reports no sensitive/restricted-scope verification requirement.
+- Backend CI initially failed three expiry tests because their fixed real-clock offset did not account for prior simulated sign-in time. Corrected tests to advance eight days from the returned session creation time. All 39 applicable auth/native/public-page tests pass locally; both full CI reruns passed: 248 passed, 48 skipped. PR #67 was merged as `5177bce`; production deployment `dpl_Ao8pXdgqTpxtrCS9xKXogZoZWPU1` is Ready on main. Final requests using the actual `X-Finance-Buddy-Build: 15` header returned session 200/null and private endpoint 401/unauthenticated. Production auth code is unchanged.
+
+Artifacts: `artifacts/release-1.0-15/` contains archive/upload logs, build settings, full manifest inventory and aggregate privacy summary. No public App Review submission or release occurred.
+
+## Release preparation — September 15, 2026
+
+See [release-status.md](release-status.md) for the live App Store record, completed settings, upload evidence and remaining blockers. This section supersedes the older “no build uploaded” status below; historical verification is retained.
+
+- Created **Finance Buddy: Journal**, Apple ID **6812466832**. Saved listing copy, subtitle, Finance category, support/privacy URLs, MXN 0.00 pricing, Mexico-only availability, iPhone-only distribution and manual release. Completed the current age-rating questionnaire: **4+**.
+- **1.0 (13)** archived and uploaded successfully. The baseline simulator suite completed with **85/86 tests passing**; the AX5 additional-screen audit identified an actual clipped amount (`1,250…`) in the entry editor. The macOS Core run passed **63 tests**.
+- Fixed the amount field's layout and VoiceOver labeling; **1.0 (14)** archived with no build warnings, passed Release checks and code-signature verification, and uploaded successfully. All **four focused UI tests** passed: additional AX5 screens, largest-text app flow, light app flow, and entry creation/editing/deletion with period navigation. Inspected the AX5 result image showing the full `1,250.00` value.
+- Verified the Release checker rejects invalid origin, ATS exceptions, bundle ID, version and build. Release no longer includes local Debug overrides.
+- Captured six standard-size, light-mode screenshots from the fake-backed build 14 on iPhone 17 Pro Max / iOS 26.5, exported as opaque 1320 × 2868 JPEGs. Confirmed all six screenshots persist in App Store Connect after reloading, in Dashboard / Entries / Entry editor / Budgets / Categories / Export order. The 6.5-inch section inherits this set.
+- Inspected the final archive's app/SDK privacy manifests. Google Sign-In adds declarations omitted from the previous privacy table, including analytics purposes. Corrected the submission guidance and prepared a policy amendment; the public policy has not been updated and App Privacy answers remain unpublished.
+- Public Privacy and Support pages returned 200 signed out. Production's session endpoint returned 200/null for an unauthenticated build-13 request. Real sign-in, exports, provider revocation, account isolation, physical-device accessibility and the exact production minimum build remain unverified for build 14.
+- No public App Review submission or release was performed. App Store Connect confirms uploads 13 and 14 are Complete, and build 14 is Ready to Submit in TestFlight. Tester setup, review credentials/contact and remaining account declarations are pending; no installs are recorded.
+
+Artifacts: `artifacts/release-1.0-13/` (baseline and first upload) and `artifacts/release-1.0-14/` (corrected archive, upload log, focused `.xcresult`, screenshots and guard-check results). The original full test tool timed out while xcodebuild continued; the result was read from its completed `.xcresult`.
+
 Recorded on September 13, 2026 using Xcode 26.6, Swift 6 strict concurrency, and iOS 26.5 / iOS 17.5 simulators. Minimum deployment target: iOS 17. App version: 1.0, build 12.
 
 ## Physical-device connection fix — September 14, 2026
