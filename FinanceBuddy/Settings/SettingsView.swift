@@ -39,8 +39,12 @@ struct SettingsView: View {
         Button {
           browser = BrowserDestination(url: Website.url)
         } label: {
-          Label("Finance Buddy website", systemImage: "arrow.up.right.square")
-            .fixedSize(horizontal: false, vertical: true)
+          Label {
+            Text("Finance Buddy website").fixedSize(horizontal: false, vertical: true)
+          } icon: {
+            Image(systemName: "arrow.up.right.square")
+          }
+          .labelStyle(.titleAndIcon)
         }
         Text(
           "A private personal finance journal. Recorded activity in MXN, using Mexico City calendar dates."

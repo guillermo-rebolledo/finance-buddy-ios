@@ -125,3 +125,10 @@ Follow the [submission kit](app-store-submission.md#testflight-production-checkl
 | Submission date / review build / review outcome | Not submitted |
 
 For each completed checklist item record pass/fail, date, build and evidence here. Put credentials only in App Store Connect. Track rejection feedback as new issues rather than marking untested behavior passed.
+
+## Wallet icon build 16 — September 15, 2026
+
+- Original supplied artwork retained in `docs/branding`; generated icon is 1024 × 1024, sRGB and opaque. Regeneration produces identical bytes. Inspected the small device icon extracted from the signed archive; the compiled catalog also contains the 1024 × 1024 marketing icon.
+- Core suite: 63 tests in 11 suites passed (`artifacts/icon-update/core-tests.log`). Entry create/edit/delete/period navigation passed on iPhone 17 Pro Max / iOS 26.5 (`artifacts/release-1.0-16/FocusedTests.xcresult`).
+- The broader Pro Max accessibility run found Settings website text clipping and a Categories hit-region warning. Fixed Settings by using an explicit title-and-icon layout with vertically wrapping text; the focused standard/largest-text regression passes (`SettingsLabelTests.xcresult`). The first wrapping-only attempt did not resolve it; retained both failed runs as evidence.
+- **Remaining before public release:** investigate the Categories hit-region warning on Pro Max and complete the existing physical-device checklist. The full accessibility suite is not claimed green for build 16. This does not prevent distributing the build through TestFlight for testing.
