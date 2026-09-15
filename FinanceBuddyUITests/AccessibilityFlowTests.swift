@@ -1,6 +1,18 @@
 import XCTest
 
 final class AccessibilityFlowTests: XCTestCase {
+  @MainActor func testSettingsWebsiteLabelAtStandardAndLargestTextSizes() throws {
+    let app = XCUIApplication()
+    for sizeArguments in [[], ["-largestType"]] {
+      app.launchArguments = ["-useFakeAPI", "-light", "-previewScreen", "settings"] + sizeArguments
+      app.launch()
+      let website = app.buttons["Finance Buddy website"]
+      for _ in 0..<5 where !website.isHittable { app.swipeUp() }
+      XCTAssertTrue(website.isHittable)
+      try audit(app, "Settings website \(sizeArguments.isEmpty ? "standard" : "largest")")
+    }
+  }
+
   @MainActor func testAdditionalScreensAtLargestTextSize() throws {
     let app = XCUIApplication()
     for screen in [
